@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ThemeContext, THEME_STORAGE_KEY, type Theme } from "@/lib/theme-context";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   useEffect(() => {
     const stored = (typeof window !== "undefined" &&

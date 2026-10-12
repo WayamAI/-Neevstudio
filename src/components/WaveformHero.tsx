@@ -38,7 +38,7 @@ export function WaveformHero({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl bg-ink text-ink-foreground shadow-elevated",
+        "overflow-hidden rounded-lg border border-muted bg-container text-primary",
         className,
       )}
     >
@@ -62,16 +62,16 @@ export function WaveformHero({
       >
         <defs>
           <linearGradient id="wave-fill" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--color-teal)" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="var(--color-teal)" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--text-secondary)" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="var(--text-secondary)" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path d={`${path} L 1200 ${height} L 0 ${height} Z`} fill="url(#wave-fill)" />
         <path
           d={path}
           fill="none"
-          stroke="var(--color-teal)"
-          strokeWidth="2.5"
+          stroke="var(--text-secondary)"
+          strokeWidth="1.75"
           strokeLinejoin="round"
           strokeLinecap="round"
           className="waveform-draw"

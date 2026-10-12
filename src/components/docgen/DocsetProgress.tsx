@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -5,7 +6,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DocPanel, DOC_LABEL, countRows } from "./DocsetResult";
 import { StatusIcon, useStickToBottom } from "./progress-shared";
 import type { DocGenJob } from "@/lib/api";
-import { FileText, Loader2, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function DocsetProgress({ job }: { job: DocGenJob }) {
@@ -26,17 +26,17 @@ export function DocsetProgress({ job }: { job: DocGenJob }) {
   return (
     <div className="space-y-4">
       <Card>
-        <CardContent className="p-6">
+        <CardContent>
           <div className="flex items-center gap-3">
-            <Loader2 className="h-5 w-5 text-primary animate-spin" />
+            <AppIcon name="spinner" size="xl" className="text-primary animate-spin" />
             <div className="min-w-0">
-              <div className="text-[14px] font-semibold">Generating the document set…</div>
-              <div className="text-[12px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                <FileText className="h-3.5 w-3.5 shrink-0" />
+              <div className="text-body-md font-semibold">Generating the document set…</div>
+              <div className="text-body-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                <AppIcon name="document" size="sm" className="shrink-0" />
                 <span className="truncate">{job.source_name}</span>
               </div>
             </div>
-            <div className="ml-auto tabular text-[12px] text-muted-foreground">{pct}%</div>
+            <div className="ml-auto tabular text-body-sm text-muted-foreground">{pct}%</div>
           </div>
 
           <Progress value={pct} className="h-1.5 mt-4" />
@@ -46,10 +46,14 @@ export function DocsetProgress({ job }: { job: DocGenJob }) {
             {job.stages.map((s, i) => (
               <div key={s.key} className="flex items-start gap-1">
                 {i > 0 && (
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 mt-[3px]" />
+                  <AppIcon
+                    name="chevronRight"
+                    size="sm"
+                    className="text-muted-foreground/50 mt-[3px]"
+                  />
                 )}
                 <div className="max-w-[150px]">
-                  <div className="flex items-center gap-1.5 text-[12px]">
+                  <div className="flex items-center gap-1.5 text-body-sm">
                     <StatusIcon status={s.status} small />
                     <span
                       className={cn(
@@ -63,7 +67,7 @@ export function DocsetProgress({ job }: { job: DocGenJob }) {
                   {s.detail && (
                     <div
                       className={cn(
-                        "text-[10.5px] mt-0.5 leading-snug",
+                        "text-caption mt-0.5 leading-snug",
                         s.status === "failed" ? "text-coral" : "text-muted-foreground",
                       )}
                     >
@@ -75,7 +79,7 @@ export function DocsetProgress({ job }: { job: DocGenJob }) {
             ))}
           </div>
 
-          <div className="mt-5 rounded-md bg-muted/50 p-3 text-[11.5px] text-muted-foreground leading-relaxed">
+          <div className="mt-5 rounded-md bg-muted/50 p-3 text-caption text-muted-foreground leading-relaxed">
             Real generation — four chained model calls, each one seeing the documents before it so
             the requirement IDs line up across the set. Each document appears below the moment its
             call returns.
@@ -92,10 +96,10 @@ export function DocsetProgress({ job }: { job: DocGenJob }) {
               return (
                 <TabsTrigger key={dt} value={dt} disabled={!doc}>
                   {stage?.status === "running" && !doc ? (
-                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                    <AppIcon name="spinner" size="xs" className="mr-1 animate-spin" />
                   ) : null}
                   {DOC_LABEL[dt]}
-                  {doc && <span className="ml-1.5 text-[11px] opacity-60">{countRows(doc)}</span>}
+                  {doc && <span className="ml-1.5 text-caption opacity-60">{countRows(doc)}</span>}
                 </TabsTrigger>
               );
             })}

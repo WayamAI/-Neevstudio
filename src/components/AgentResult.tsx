@@ -15,7 +15,7 @@ function SectionView({ section }: { section: Section }) {
   return (
     <div className="space-y-2">
       {title && (
-        <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+        <div className="text-caption font-medium uppercase tracking-wider text-muted-foreground">
           {title}
         </div>
       )}
@@ -26,7 +26,7 @@ function SectionView({ section }: { section: Section }) {
             <TableHeader>
               <TableRow>
                 {section.columns.map((c) => (
-                  <TableHead key={c} className="text-[11px]">
+                  <TableHead key={c} className="text-caption">
                     {c}
                   </TableHead>
                 ))}
@@ -36,7 +36,7 @@ function SectionView({ section }: { section: Section }) {
               {section.rows.map((row, i) => (
                 <TableRow key={i}>
                   {row.map((cell, j) => (
-                    <TableCell key={j} className="text-[12px] align-top">
+                    <TableCell key={j} className="text-body-sm align-top">
                       {cell}
                     </TableCell>
                   ))}
@@ -48,7 +48,7 @@ function SectionView({ section }: { section: Section }) {
       )}
 
       {section.type === "list" && (
-        <ul className="list-disc pl-5 space-y-1 text-[12.5px]">
+        <ul className="list-disc pl-5 space-y-1 text-body-sm">
           {section.items.map((it, i) => (
             <li key={i}>{it}</li>
           ))}
@@ -60,20 +60,20 @@ function SectionView({ section }: { section: Section }) {
           {section.items.map((it, i) => (
             <div key={i} className="rounded-md border border-border p-3">
               <div className="flex items-start justify-between gap-2">
-                <div className="text-[12.5px] font-medium">{it.title}</div>
+                <div className="text-body-sm font-medium">{it.title}</div>
                 {it.badge && (
-                  <Badge variant="secondary" className="text-[10px] shrink-0">
+                  <Badge variant="secondary" className="text-micro shrink-0">
                     {it.badge}
                   </Badge>
                 )}
               </div>
               {it.subtitle && (
-                <div className="tabular text-[11px] text-muted-foreground mt-0.5">
+                <div className="tabular text-caption text-muted-foreground mt-0.5">
                   {it.subtitle}
                 </div>
               )}
               {it.body && (
-                <div className="text-[12px] text-foreground/85 mt-1.5 whitespace-pre-wrap">
+                <div className="text-body-sm text-foreground/85 mt-1.5 whitespace-pre-wrap">
                   {it.body}
                 </div>
               )}
@@ -83,7 +83,7 @@ function SectionView({ section }: { section: Section }) {
       )}
 
       {section.type === "kv" && (
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12.5px]">
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-body-sm">
           {section.pairs.map((p, i) => (
             <div key={i} className="contents">
               <dt className="text-muted-foreground">{p.key}</dt>
@@ -94,7 +94,7 @@ function SectionView({ section }: { section: Section }) {
       )}
 
       {section.type === "markdown" && (
-        <div className="text-[12.5px] leading-relaxed whitespace-pre-wrap text-foreground/90">
+        <div className="text-body-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
           {section.text}
         </div>
       )}
@@ -105,7 +105,7 @@ function SectionView({ section }: { section: Section }) {
 export function AgentResult({ data }: { data: AgentResultData }) {
   return (
     <div className="space-y-5">
-      <p className="text-[13px] text-foreground/90">{data.summary}</p>
+      <p className="text-label-md text-foreground/90">{data.summary}</p>
       {data.sections.map((s, i) => (
         <SectionView key={i} section={s} />
       ))}

@@ -1,13 +1,16 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { useEffect, useRef } from "react";
-import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { appScrollElement } from "@/lib/scroll";
 
 export function StatusIcon({ status, small }: { status: string; small?: boolean }) {
   const size = small ? "h-3.5 w-3.5" : "h-4 w-4";
-  if (status === "done") return <CheckCircle2 className={cn(size, "text-success shrink-0")} />;
+  if (status === "done")
+    return <AppIcon name="success" className={cn(size, "text-success shrink-0")} />;
   if (status === "running")
-    return <Loader2 className={cn(size, "text-primary animate-spin shrink-0")} />;
-  if (status === "failed") return <AlertTriangle className={cn(size, "text-coral shrink-0")} />;
+    return <AppIcon name="spinner" className={cn(size, "text-primary animate-spin shrink-0")} />;
+  if (status === "failed")
+    return <AppIcon name="warning" className={cn(size, "text-coral shrink-0")} />;
   return <div className={cn(size, "rounded-full border border-border shrink-0")} />;
 }
 
@@ -17,15 +20,17 @@ export function useStickToBottom(dep: number) {
   const stuck = useRef(true);
   useEffect(() => {
     const onScroll = () => {
-      const el = document.documentElement;
+      const el = appScrollElement();
       stuck.current = el.scrollHeight - el.scrollTop - el.clientHeight < 160;
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const target = appScrollElement();
+    target.addEventListener("scroll", onScroll, { passive: true });
+    return () => target.removeEventListener("scroll", onScroll);
   }, []);
   useEffect(() => {
     if (dep > 0 && stuck.current) {
-      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+      const el = appScrollElement();
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
   }, [dep]);
 }

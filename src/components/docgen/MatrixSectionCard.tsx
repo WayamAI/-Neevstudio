@@ -37,8 +37,8 @@ export function MatrixSectionCard({
     <Card>
       <CardContent className="p-0">
         <div className="px-4 py-2.5 border-b border-border flex items-center gap-2">
-          <span className="text-[13.5px] font-semibold">{title}</span>
-          <span className="text-[11.5px] text-muted-foreground">{rows.length} requirements</span>
+          <span className="text-label-md font-semibold">{title}</span>
+          <span className="text-caption text-muted-foreground">{rows.length} requirements</span>
           {headerNote}
         </div>
         <div className="overflow-x-auto">
@@ -64,27 +64,27 @@ export function MatrixSectionCard({
                   )}
                 >
                   <TableCell className="font-medium tabular align-top">{row.req_id}</TableCell>
-                  <TableCell className="text-[12.5px] align-top">{row.requirement}</TableCell>
-                  <TableCell className="text-[12.5px] text-muted-foreground align-top">
+                  <TableCell className="text-body-sm align-top">{row.requirement}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground align-top">
                     {row.rationale ?? "—"}
                   </TableCell>
-                  <TableCell className="text-[12px] align-top">{row.standards ?? "—"}</TableCell>
-                  <TableCell className="text-[12.5px] text-muted-foreground align-top">
+                  <TableCell className="text-body-sm align-top">{row.standards ?? "—"}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground align-top">
                     {row.compliance_approach ?? "—"}
                   </TableCell>
-                  <TableCell className="text-[12.5px] text-muted-foreground align-top">
+                  <TableCell className="text-body-sm text-muted-foreground align-top">
                     {row.risk_hazard ?? "—"}
                   </TableCell>
                   <TableCell className="align-top">
                     {row.risk_level ? (
                       <Badge
                         variant="secondary"
-                        className={cn("text-[11px]", riskStyle[row.risk_level])}
+                        className={cn("text-caption", riskStyle[row.risk_level])}
                       >
                         {row.risk_level}
                       </Badge>
                     ) : (
-                      <span className="text-[11.5px] text-muted-foreground">pending</span>
+                      <span className="text-caption text-muted-foreground">pending</span>
                     )}
                   </TableCell>
                 </TableRow>

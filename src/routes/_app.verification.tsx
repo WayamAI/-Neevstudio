@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/table";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { Progress } from "@/components/ui/progress";
-import { PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { APP_NAME } from "@/lib/branding";
 
@@ -107,7 +107,7 @@ function VerificationPage() {
         subtitle="1,284 test cases · 87% coverage · live rollup from CI rig + manual entries"
         actions={
           <Button size="sm">
-            <PlayCircle className="h-3.5 w-3.5 mr-1.5" />
+            <AppIcon name="run" size="sm" className="mr-1.5" />
             Generate test cases
           </Button>
         }
@@ -115,9 +115,9 @@ function VerificationPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Overall coverage</CardTitle>
-            <div className="text-[11px] text-muted-foreground">All test cases · live</div>
+          <CardHeader>
+            <CardTitle>Overall coverage</CardTitle>
+            <div className="text-caption text-muted-foreground">All test cases · live</div>
           </CardHeader>
           <CardContent>
             <div className="h-[240px] relative">
@@ -146,17 +146,17 @@ function VerificationPage() {
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none top-[10px]">
-                <div className="tabular text-3xl font-semibold">87%</div>
-                <div className="text-[11px] text-muted-foreground">1,284 cases</div>
+                <div className="tabular font-display text-display-xl">87%</div>
+                <div className="text-caption text-muted-foreground">1,284 cases</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">V-model traceability</CardTitle>
-            <div className="text-[11px] text-muted-foreground">
+          <CardHeader>
+            <CardTitle>V-model traceability</CardTitle>
+            <div className="text-caption text-muted-foreground">
               Each definition level paired with its verification activity
             </div>
           </CardHeader>
@@ -196,16 +196,16 @@ function VerificationPage() {
           { l: "SRS approved", v: 62, of: 96, tone: "text-success" },
         ].map((s) => (
           <Card key={s.l}>
-            <CardContent className="p-5">
+            <CardContent>
               <div className="flex items-baseline justify-between">
-                <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                <div className="text-caption font-medium uppercase tracking-wider text-muted-foreground">
                   {s.l}
                 </div>
-                <div className="tabular text-[11px] text-muted-foreground">
+                <div className="tabular text-caption text-muted-foreground">
                   {s.v}/{s.of}
                 </div>
               </div>
-              <div className={cn("tabular text-3xl font-semibold mt-1", s.tone)}>
+              <div className={cn("tabular font-display text-display-2xl mt-1", s.tone)}>
                 {Math.round((s.v / s.of) * 100)}%
               </div>
               <Progress value={(s.v / s.of) * 100} className="h-1.5 mt-3" />
@@ -215,9 +215,9 @@ function VerificationPage() {
       </div>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">Recent test executions</CardTitle>
-          <div className="text-[11px] text-muted-foreground">
+        <CardHeader>
+          <CardTitle>Recent test executions</CardTitle>
+          <div className="text-caption text-muted-foreground">
             Results from CI rig via ALM integration + manual entries
           </div>
         </CardHeader>
@@ -239,16 +239,16 @@ function VerificationPage() {
                 <TableRow key={e.id}>
                   <TableCell className="tabular font-medium">{e.id}</TableCell>
                   <TableCell className="tabular">{e.req}</TableCell>
-                  <TableCell className="text-[12.5px]">{e.name}</TableCell>
+                  <TableCell className="text-body-sm">{e.name}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className="text-[10.5px]">
+                    <Badge variant="secondary" className="text-caption">
                       {e.level}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
                       className={cn(
-                        "text-[10.5px] border-0",
+                        "text-caption border-0",
                         e.result === "Pass" && "bg-success-soft text-success",
                         e.result === "Fail" && "bg-coral-soft text-coral",
                         e.result === "Running" && "bg-sw-soft text-sw",
@@ -257,10 +257,10 @@ function VerificationPage() {
                       {e.result}
                     </Badge>
                   </TableCell>
-                  <TableCell className="tabular text-[12px] text-muted-foreground">
+                  <TableCell className="tabular text-body-sm text-muted-foreground">
                     {e.when}
                   </TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">{e.by}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground">{e.by}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

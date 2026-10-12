@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { APP_NAME } from "@/lib/branding";
 import { PageHeader } from "@/components/PageHeader";
@@ -13,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Download } from "lucide-react";
 
 export const Route = createFileRoute("/_app/traceability")({
   head: () => ({
@@ -64,19 +64,19 @@ function TraceabilityPage() {
         subtitle="One graph, one table — click REQ-1058 and see the unbroken chain"
         actions={
           <Button size="sm" variant="outline">
-            <Download className="h-3.5 w-3.5 mr-1.5" />
+            <AppIcon name="download" size="sm" className="mr-1.5" />
             Export trace
           </Button>
         }
       />
 
       <Card>
-        <CardHeader className="pb-2 flex-row items-center justify-between gap-4">
+        <CardHeader className="flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-1 max-w-md">
-            <Search className="h-4 w-4 text-muted-foreground" />
+            <AppIcon name="search" className="text-muted-foreground" />
             <Input defaultValue="REQ-1058" className="h-8" />
           </div>
-          <div className="flex items-center gap-3 text-[11px]">
+          <div className="flex items-center gap-3 text-caption">
             {Object.entries(typeColor).map(([k, v]) => (
               <div key={k} className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full" style={{ background: v }} />
@@ -162,8 +162,8 @@ function TraceabilityPage() {
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">Trace table · REQ-1058</CardTitle>
+        <CardHeader>
+          <CardTitle>Trace table · REQ-1058</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -222,18 +222,18 @@ function TraceabilityPage() {
               ].map((r) => (
                 <TableRow key={r.h}>
                   <TableCell className="tabular">{r.h}</TableCell>
-                  <TableCell className="text-[12.5px]">{r.f}</TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">{r.r}</TableCell>
-                  <TableCell className="text-[12.5px] font-medium">{r.t}</TableCell>
+                  <TableCell className="text-body-sm">{r.f}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground">{r.r}</TableCell>
+                  <TableCell className="text-body-sm font-medium">{r.t}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className="text-[10.5px]">
+                    <Badge variant="secondary" className="text-caption">
                       {r.d}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
                       className={
-                        "text-[10.5px] border-0 " +
+                        "text-caption border-0 " +
                         (r.s === "Fail"
                           ? "bg-coral-soft text-coral"
                           : "bg-success-soft text-success")

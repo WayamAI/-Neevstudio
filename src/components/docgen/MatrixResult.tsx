@@ -26,11 +26,11 @@ export function MatrixResult({ job }: { job: DocGenJob }) {
         <CardContent className="p-4">
           <div className="flex flex-wrap items-start gap-4">
             <div className="min-w-0 flex-1">
-              <div className="text-[15px] font-semibold">{matrix.doc_title}</div>
+              <div className="text-body-md font-semibold">{matrix.doc_title}</div>
               {matrix.subtitle && (
-                <div className="text-[12.5px] text-muted-foreground mt-0.5">{matrix.subtitle}</div>
+                <div className="text-body-sm text-muted-foreground mt-0.5">{matrix.subtitle}</div>
               )}
-              <div className="text-[11.5px] text-muted-foreground mt-2">
+              <div className="text-caption text-muted-foreground mt-2">
                 Base requirements taken verbatim from{" "}
                 <span className="font-medium">{matrix.source_name}</span>. Rationale, standards,
                 compliance approach, hazard and risk level added for DHF traceability.
@@ -44,14 +44,14 @@ export function MatrixResult({ job }: { job: DocGenJob }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-border">
-            <span className="text-[12px] text-muted-foreground mr-1">
+            <span className="text-body-sm text-muted-foreground mr-1">
               {rows.length} requirements · {matrix.sections.length} sections
             </span>
             {(["High", "Medium", "Low"] as const).map((level) =>
               counts[level] ? (
                 <Badge
                   key={level}
-                  className={cn("text-[11px]", riskStyle[level])}
+                  className={cn("text-caption", riskStyle[level])}
                   variant="secondary"
                 >
                   {counts[level]} {level}
@@ -59,7 +59,10 @@ export function MatrixResult({ job }: { job: DocGenJob }) {
               ) : null,
             )}
             {pending > 0 && (
-              <Badge variant="secondary" className="text-[11px] bg-secondary text-muted-foreground">
+              <Badge
+                variant="secondary"
+                className="text-caption bg-secondary text-muted-foreground"
+              >
                 {pending} pending SME review
               </Badge>
             )}

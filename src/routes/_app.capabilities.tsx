@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,7 +24,6 @@ import {
   type RunResponse,
 } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { PlayCircle, Sliders, Loader2, AlertTriangle, Clock, Cpu, History } from "lucide-react";
 
 export const Route = createFileRoute("/_app/capabilities")({
   head: () => ({
@@ -124,12 +124,12 @@ function CapabilitiesPage() {
         ].map((s) => (
           <Card key={s.l}>
             <CardContent className="p-4">
-              <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">
+              <div className="text-caption uppercase tracking-wider text-muted-foreground">
                 {s.l}
               </div>
               <div
                 className={cn(
-                  "tabular text-3xl font-semibold mt-1",
+                  "tabular font-display text-display-2xl mt-1",
                   s.tone === "success" && "text-success",
                   s.tone === "amber" && "text-amber-brand",
                 )}
@@ -143,7 +143,7 @@ function CapabilitiesPage() {
 
       {groups.map((g) => (
         <div key={g}>
-          <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
+          <div className="text-caption font-medium uppercase tracking-wider text-muted-foreground mb-2">
             {g}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -154,17 +154,17 @@ function CapabilitiesPage() {
                 const agentRuns = runsByAgent[a.id] ?? [];
                 return (
                   <Card key={a.id}>
-                    <CardHeader className="pb-2">
+                    <CardHeader>
                       <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-[13.5px] font-semibold">{a.name}</CardTitle>
-                        <Badge className={cn("text-[10.5px] border-0", statusStyle[a.status])}>
+                        <CardTitle>{a.name}</CardTitle>
+                        <Badge className={cn("text-caption border-0", statusStyle[a.status])}>
                           {a.status}
                         </Badge>
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                      <p className="text-[12.5px] text-muted-foreground">{a.description}</p>
-                      <div className="flex items-center justify-between text-[11px] text-muted-foreground tabular min-h-6">
+                      <p className="text-body-sm text-muted-foreground">{a.description}</p>
+                      <div className="flex items-center justify-between text-caption text-muted-foreground tabular min-h-6">
                         {agentRuns.length > 0 ? (
                           <>
                             <div>
@@ -174,10 +174,10 @@ function CapabilitiesPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-6 px-1.5 text-[11px]"
+                              className="h-6 px-1.5 text-caption"
                               onClick={() => handleView(a, agentRuns[0].run_id)}
                             >
-                              <History className="h-3 w-3 mr-1" />
+                              <AppIcon name="history" size="xs" className="mr-1" />
                               Last result
                             </Button>
                           </>
@@ -196,14 +196,19 @@ function CapabilitiesPage() {
                           onClick={() => handleRun(a)}
                         >
                           {isRunning ? (
-                            <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                            <AppIcon name="spinner" size="sm" className="mr-1.5 animate-spin" />
                           ) : (
-                            <PlayCircle className="h-3.5 w-3.5 mr-1.5" />
+                            <AppIcon name="run" size="sm" className="mr-1.5" />
                           )}
                           {isRunning ? "Running…" : "Run now"}
                         </Button>
-                        <Button size="sm" variant="outline" className="h-8">
-                          <Sliders className="h-3.5 w-3.5" />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8"
+                          aria-label={`Configure ${a.name}`}
+                        >
+                          <AppIcon name="sliders" size="sm" />
                         </Button>
                       </div>
                     </CardContent>
@@ -220,7 +225,7 @@ function CapabilitiesPage() {
             <DialogTitle className="flex items-center gap-2">
               {active?.name}
               {active && (
-                <Badge className={cn("text-[10.5px] border-0", statusStyle[active.status])}>
+                <Badge className={cn("text-caption border-0", statusStyle[active.status])}>
                   {active.status}
                 </Badge>
               )}
@@ -231,8 +236,8 @@ function CapabilitiesPage() {
           <div className="overflow-y-auto pr-1">
             {run.isPending && (
               <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                <div className="text-[13px] text-muted-foreground">
+                <AppIcon name="spinner" size="2xl" className="text-primary animate-spin" />
+                <div className="text-label-md text-muted-foreground">
                   Running agent — calling the model…
                 </div>
               </div>
@@ -240,8 +245,8 @@ function CapabilitiesPage() {
 
             {run.isError && (
               <div className="flex items-start gap-3 rounded-md border border-coral/30 bg-coral-soft/40 p-4">
-                <AlertTriangle className="h-4 w-4 text-coral mt-0.5 shrink-0" />
-                <div className="text-[12.5px]">
+                <AppIcon name="warning" className="text-coral mt-0.5 shrink-0" />
+                <div className="text-body-sm">
                   <div className="font-medium text-coral">Run failed</div>
                   <div className="mt-1 text-foreground/80">{run.error.message}</div>
                 </div>
@@ -250,13 +255,13 @@ function CapabilitiesPage() {
 
             {run.isSuccess && (
               <div className="space-y-4">
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground tabular border-b border-border pb-3">
+                <div className="flex flex-wrap items-center gap-3 text-caption text-muted-foreground tabular border-b border-border pb-3">
                   <span className="flex items-center gap-1">
-                    <Cpu className="h-3.5 w-3.5" />
+                    <AppIcon name="hardware" size="sm" />
                     AI model
                   </span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
+                    <AppIcon name="clock" size="sm" />
                     {(run.data.duration_ms / 1000).toFixed(1)}s
                   </span>
                   <span>scope: {run.data.scope}</span>
@@ -267,15 +272,15 @@ function CapabilitiesPage() {
 
             {!showLive && viewRunId !== null && viewed.isPending && (
               <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                <div className="text-[13px] text-muted-foreground">Loading saved run…</div>
+                <AppIcon name="spinner" size="2xl" className="text-primary animate-spin" />
+                <div className="text-label-md text-muted-foreground">Loading saved run…</div>
               </div>
             )}
 
             {!showLive && viewed.isError && (
               <div className="flex items-start gap-3 rounded-md border border-coral/30 bg-coral-soft/40 p-4">
-                <AlertTriangle className="h-4 w-4 text-coral mt-0.5 shrink-0" />
-                <div className="text-[12.5px]">
+                <AppIcon name="warning" className="text-coral mt-0.5 shrink-0" />
+                <div className="text-body-sm">
                   <div className="font-medium text-coral">Couldn't load the saved run</div>
                   <div className="mt-1 text-foreground/80">{viewed.error.message}</div>
                 </div>
@@ -284,18 +289,18 @@ function CapabilitiesPage() {
 
             {!showLive && viewed.isSuccess && (
               <div className="space-y-4">
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground tabular border-b border-border pb-3">
+                <div className="flex flex-wrap items-center gap-3 text-caption text-muted-foreground tabular border-b border-border pb-3">
                   <span className="flex items-center gap-1">
-                    <Cpu className="h-3.5 w-3.5" />
+                    <AppIcon name="hardware" size="sm" />
                     AI model
                   </span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
+                    <AppIcon name="clock" size="sm" />
                     {(viewed.data.duration_ms / 1000).toFixed(1)}s
                   </span>
                   <span>scope: {viewed.data.scope}</span>
                   <span className="flex items-center gap-1">
-                    <History className="h-3.5 w-3.5" />
+                    <AppIcon name="history" size="sm" />
                     from {new Date(viewed.data.created_at).toLocaleString()}
                   </span>
                 </div>
@@ -305,7 +310,7 @@ function CapabilitiesPage() {
 
             {active && activeHistory.length > 0 && !run.isPending && (
               <div className="mt-5 border-t border-border pt-3">
-                <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-1.5">
+                <div className="text-caption font-medium uppercase tracking-wider text-muted-foreground mb-1.5">
                   Run history
                 </div>
                 <div className="space-y-0.5">
@@ -318,7 +323,7 @@ function CapabilitiesPage() {
                         !showLive && r.run_id === viewRunId && "bg-muted",
                       )}
                     >
-                      <div className="flex items-center gap-2 text-[11.5px] text-muted-foreground tabular">
+                      <div className="flex items-center gap-2 text-caption text-muted-foreground tabular">
                         <span className="text-foreground">
                           {new Date(r.created_at).toLocaleString()}
                         </span>

@@ -1,3 +1,5 @@
+import { AppIcon } from "@/components/ui/app-icon";
+import type { IconName } from "@/lib/icons";
 import { createFileRoute } from "@tanstack/react-router";
 import { APP_NAME } from "@/lib/branding";
 import { PageHeader } from "@/components/PageHeader";
@@ -12,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Download, FileText, GitBranch, ShieldCheck, CalendarClock } from "lucide-react";
 
 export const Route = createFileRoute("/_app/reports")({
   head: () => ({
@@ -28,21 +29,21 @@ export const Route = createFileRoute("/_app/reports")({
   component: ReportsPage,
 });
 
-const exports = [
+const exports: { name: string; format: string; icon: IconName; desc: string }[] = [
   {
-    icon: FileText,
+    icon: "document",
     name: "Design History File",
     desc: "Compiles breakdown, compliance, classification, verification, and BOM into a submission-ready document.",
     format: "PDF",
   },
   {
-    icon: GitBranch,
+    icon: "branch",
     name: "Traceability Matrix",
     desc: "Every requirement → boundary condition → test case → result, one row per hop.",
     format: "CSV / XLSX",
   },
   {
-    icon: ShieldCheck,
+    icon: "compliance",
     name: "Compliance Summary",
     desc: "Regulatory-submission-formatted standards-alignment digest.",
     format: "PDF",
@@ -95,19 +96,19 @@ function ReportsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {exports.map((e) => (
           <Card key={e.name}>
-            <CardHeader className="pb-2 flex-row items-center gap-3">
+            <CardHeader className="flex-row items-center gap-3">
               <div className="h-9 w-9 rounded-md bg-primary/12 text-primary flex items-center justify-center">
-                <e.icon className="h-4 w-4" />
+                <AppIcon name={e.icon} />
               </div>
               <div className="flex-1 min-w-0">
-                <CardTitle className="text-sm font-semibold">{e.name}</CardTitle>
-                <div className="text-[11px] text-muted-foreground">{e.format}</div>
+                <CardTitle>{e.name}</CardTitle>
+                <div className="text-caption text-muted-foreground">{e.format}</div>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-[12.5px] text-muted-foreground min-h-[58px]">{e.desc}</p>
+              <p className="text-body-sm text-muted-foreground min-h-[58px]">{e.desc}</p>
               <Button size="sm" className="mt-3 w-full">
-                <Download className="h-3.5 w-3.5 mr-1.5" />
+                <AppIcon name="download" size="sm" className="mr-1.5" />
                 Generate now
               </Button>
             </CardContent>
@@ -116,13 +117,13 @@ function ReportsPage() {
       </div>
 
       <Card>
-        <CardHeader className="pb-2 flex-row items-center justify-between">
+        <CardHeader className="flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              <CalendarClock className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="flex items-center gap-2">
+              <AppIcon name="calendar" className="text-muted-foreground" />
               Scheduled reports
             </CardTitle>
-            <div className="text-[11px] text-muted-foreground">
+            <div className="text-caption text-muted-foreground">
               Recurring delivery to distribution lists
             </div>
           </div>
@@ -144,17 +145,17 @@ function ReportsPage() {
             <TableBody>
               {scheduled.map((s) => (
                 <TableRow key={s.name}>
-                  <TableCell className="text-[12.5px] font-medium">{s.name}</TableCell>
-                  <TableCell className="text-[12px]">{s.cadence}</TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">
+                  <TableCell className="text-body-sm font-medium">{s.name}</TableCell>
+                  <TableCell className="text-body-sm">{s.cadence}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground">
                     {s.recipients}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className="text-[10.5px]">
+                    <Badge variant="secondary" className="text-caption">
                       {s.format}
                     </Badge>
                   </TableCell>
-                  <TableCell className="tabular text-[12px]">{s.next}</TableCell>
+                  <TableCell className="tabular text-body-sm">{s.next}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -163,8 +164,8 @@ function ReportsPage() {
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">Recent exports</CardTitle>
+        <CardHeader>
+          <CardTitle>Recent exports</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -180,15 +181,20 @@ function ReportsPage() {
             <TableBody>
               {recent.map((r) => (
                 <TableRow key={r.name}>
-                  <TableCell className="tabular text-[12.5px]">{r.name}</TableCell>
-                  <TableCell className="tabular text-[12px]">{r.size}</TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">{r.by}</TableCell>
-                  <TableCell className="tabular text-[12px] text-muted-foreground">
+                  <TableCell className="tabular text-body-sm">{r.name}</TableCell>
+                  <TableCell className="tabular text-body-sm">{r.size}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground">{r.by}</TableCell>
+                  <TableCell className="tabular text-body-sm text-muted-foreground">
                     {r.when}
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="icon" className="h-7 w-7">
-                      <Download className="h-3.5 w-3.5" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      aria-label={`Download ${r.name}`}
+                    >
+                      <AppIcon name="download" size="sm" />
                     </Button>
                   </TableCell>
                 </TableRow>

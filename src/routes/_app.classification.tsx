@@ -1,3 +1,5 @@
+import { FilterChip } from "@/components/ui/filter-chip";
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
@@ -39,17 +41,6 @@ import {
   Legend,
 } from "recharts";
 import { cn } from "@/lib/utils";
-import {
-  AlertTriangle,
-  ArrowRight,
-  CheckCircle2,
-  History,
-  ListChecks,
-  Loader2,
-  RotateCcw,
-  Sparkles,
-  XCircle,
-} from "lucide-react";
 
 export const Route = createFileRoute("/_app/classification")({
   validateSearch: (search: Record<string, unknown>): { breakdown?: string } => ({
@@ -195,7 +186,7 @@ function ClassificationPage() {
           <div className="flex items-center gap-2">
             {live && !running && (
               <Button size="sm" variant="outline" onClick={reset}>
-                <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
+                <AppIcon name="undo" size="sm" className="mr-1.5" />
                 Back to sample
               </Button>
             )}
@@ -207,9 +198,9 @@ function ClassificationPage() {
               trigger={
                 <Button size="sm" disabled={starting || running}>
                   {starting ? (
-                    <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                    <AppIcon name="spinner" size="sm" className="mr-1.5 animate-spin" />
                   ) : (
-                    <ListChecks className="h-3.5 w-3.5 mr-1.5" />
+                    <AppIcon name="listCheck" size="sm" className="mr-1.5" />
                   )}
                   Classify a breakdown
                 </Button>
@@ -220,15 +211,15 @@ function ClassificationPage() {
       />
 
       {error && (
-        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-[13px]">
-          <XCircle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-label-md">
+          <AppIcon name="error" className="text-coral shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {!live && (
-        <div className="flex items-start gap-2 rounded-md border border-border bg-muted/40 px-3.5 py-2.5 text-[12.5px] text-muted-foreground">
-          <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2 rounded-md border border-border bg-muted/40 px-3.5 py-2.5 text-body-sm text-muted-foreground">
+          <AppIcon name="sparkle" className="text-primary shrink-0 mt-0.5" />
           <span>
             Sample register — classify one of your breakdowns to run a live ISO 14971 classification
             pass with boundary conditions, confidence and review flags.
@@ -241,7 +232,7 @@ function ClassificationPage() {
       {live && !running && job && (
         <div
           className={cn(
-            "flex items-start gap-2 rounded-md border px-3.5 py-2.5 text-[13px]",
+            "flex items-start gap-2 rounded-md border px-3.5 py-2.5 text-label-md",
             failed
               ? "border-coral/30 bg-coral-soft/40"
               : job.status === "partial"
@@ -250,11 +241,11 @@ function ClassificationPage() {
           )}
         >
           {failed ? (
-            <XCircle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+            <AppIcon name="error" className="text-coral shrink-0 mt-0.5" />
           ) : job.status === "partial" ? (
-            <AlertTriangle className="h-4 w-4 text-amber-brand shrink-0 mt-0.5" />
+            <AppIcon name="warning" className="text-amber-brand shrink-0 mt-0.5" />
           ) : (
-            <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
+            <AppIcon name="success" className="text-success shrink-0 mt-0.5" />
           )}
           <div className="min-w-0">
             <div>
@@ -290,10 +281,10 @@ function ClassificationPage() {
           {live
             ? stats.map((s) => (
                 <Card key={s.class}>
-                  <CardContent className="p-5">
+                  <CardContent>
                     <div
                       className={cn(
-                        "text-[11px] font-medium uppercase tracking-wider",
+                        "text-caption font-medium uppercase tracking-wider",
                         s.class === "CTS" && "text-coral",
                         s.class === "CTQ" && "text-amber-brand",
                         s.class === "Standard" && "text-muted-foreground",
@@ -305,10 +296,10 @@ function ClassificationPage() {
                           ? "Critical-to-Quality"
                           : "Standard"}
                     </div>
-                    <div className="mt-1.5 tabular text-3xl font-semibold">
+                    <div className="mt-1.5 tabular font-display text-display-2xl">
                       {running && rows.length === 0 ? "—" : s.count}
                     </div>
-                    <div className="text-[12px] text-muted-foreground mt-1 tabular">
+                    <div className="text-body-sm text-muted-foreground mt-1 tabular">
                       {s.reclassified} reclassified · {s.review} for review
                     </div>
                   </CardContent>
@@ -316,12 +307,14 @@ function ClassificationPage() {
               ))
             : sampleKpis.map((k) => (
                 <Card key={k.label}>
-                  <CardContent className="p-5">
-                    <div className={cn("text-[11px] font-medium uppercase tracking-wider", k.tone)}>
+                  <CardContent>
+                    <div
+                      className={cn("text-caption font-medium uppercase tracking-wider", k.tone)}
+                    >
                       {k.label}
                     </div>
-                    <div className="mt-1.5 tabular text-3xl font-semibold">{k.value}</div>
-                    <div className="text-[12px] text-muted-foreground mt-1 tabular">{k.sub}</div>
+                    <div className="mt-1.5 tabular font-display text-display-2xl">{k.value}</div>
+                    <div className="text-body-sm text-muted-foreground mt-1 tabular">{k.sub}</div>
                   </CardContent>
                 </Card>
               ))}
@@ -330,9 +323,9 @@ function ClassificationPage() {
 
       {!failed && (
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Risk distribution</CardTitle>
-            <div className="text-[11px] text-muted-foreground">
+          <CardHeader>
+            <CardTitle>Risk distribution</CardTitle>
+            <div className="text-caption text-muted-foreground">
               High / Medium / Low by classification
             </div>
           </CardHeader>
@@ -374,10 +367,10 @@ function ClassificationPage() {
 
       {!failed && (
         <Card>
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-sm font-semibold">Requirement register</CardTitle>
-              <div className="text-[11px] text-muted-foreground">
+              <CardTitle>Requirement register</CardTitle>
+              <div className="text-caption text-muted-foreground">
                 {live
                   ? "Statement → class → standard → boundary condition → confidence → review"
                   : "Statement → class → standard → boundary condition → coverage → result"}
@@ -387,15 +380,9 @@ function ClassificationPage() {
               {(
                 ["All", "CTS", "CTQ", "SW", "HW", ...(live && hasLbl ? ["LBL"] : [])] as Filter[]
               ).map((f) => (
-                <Button
-                  key={f}
-                  size="sm"
-                  variant={filter === f ? "default" : "outline"}
-                  onClick={() => setFilter(f)}
-                  className="h-7 px-2.5 text-[11.5px]"
-                >
+                <FilterChip key={f} selected={filter === f} onClick={() => setFilter(f)}>
                   {f}
-                </Button>
+                </FilterChip>
               ))}
             </div>
           </CardHeader>
@@ -447,16 +434,16 @@ function PreviousClassifications({ onLoad }: { onLoad: (runId: string) => void }
     <Popover onOpenChange={open}>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm">
-          <History className="h-3.5 w-3.5 mr-1.5" />
+          <AppIcon name="history" size="sm" className="mr-1.5" />
           Previous classifications
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[320px] p-1.5">
         {runs === null && (
-          <div className="px-2 py-3 text-[12px] text-muted-foreground">Loading…</div>
+          <div className="px-2 py-3 text-body-sm text-muted-foreground">Loading…</div>
         )}
         {runs?.length === 0 && (
-          <div className="px-2 py-3 text-[12px] text-muted-foreground">
+          <div className="px-2 py-3 text-body-sm text-muted-foreground">
             No previous classifications yet. Completed runs are saved automatically.
           </div>
         )}
@@ -467,16 +454,16 @@ function PreviousClassifications({ onLoad }: { onLoad: (runId: string) => void }
             className="w-full text-left rounded-md px-2 py-1.5 hover:bg-muted transition-colors"
           >
             <div className="flex items-center gap-1.5">
-              <div className="text-[12.5px] font-medium truncate">
+              <div className="text-body-sm font-medium truncate">
                 {run.product ?? run.source_name}
               </div>
               {run.status === "partial" && (
-                <Badge className="h-4 text-[9.5px] border-0 bg-amber-soft text-amber-brand shrink-0">
+                <Badge className="h-4 text-micro border-0 bg-amber-soft text-amber-brand shrink-0">
                   partial
                 </Badge>
               )}
             </div>
-            <div className="text-[11px] text-muted-foreground">
+            <div className="text-caption text-muted-foreground">
               {run.requirement_count} requirements · {new Date(run.created_at).toLocaleString()}
             </div>
           </button>
@@ -493,33 +480,33 @@ function ClassifyProgress({ job }: { job: ClassifyJob }) {
 
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent>
         <div className="flex items-center gap-3">
-          <Loader2 className="h-5 w-5 text-primary animate-spin" />
+          <AppIcon name="spinner" size="xl" className="text-primary animate-spin" />
           <div className="min-w-0">
-            <div className="text-[14px] font-semibold">Classifying requirements…</div>
-            <div className="text-[12px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
-              <ListChecks className="h-3.5 w-3.5 shrink-0" />
+            <div className="text-body-md font-semibold">Classifying requirements…</div>
+            <div className="text-body-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
+              <AppIcon name="listCheck" size="sm" className="shrink-0" />
               <span className="truncate">
                 {job.product ?? job.source_name}
                 {job.product && <> · {job.source_name}</>}
               </span>
             </div>
           </div>
-          <div className="ml-auto tabular text-[12px] text-muted-foreground">{pct}%</div>
+          <div className="ml-auto tabular text-body-sm text-muted-foreground">{pct}%</div>
         </div>
 
         <Progress value={pct} className="h-1.5 mt-4" />
 
         <ul className="mt-5 space-y-2.5">
           {job.stages.map((s) => (
-            <li key={s.key} className="flex items-start gap-2.5 text-[13px]">
+            <li key={s.key} className="flex items-start gap-2.5 text-label-md">
               {s.status === "done" ? (
-                <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
+                <AppIcon name="success" className="text-success shrink-0 mt-0.5" />
               ) : s.status === "running" ? (
-                <Loader2 className="h-4 w-4 text-primary animate-spin shrink-0 mt-0.5" />
+                <AppIcon name="spinner" className="text-primary animate-spin shrink-0 mt-0.5" />
               ) : s.status === "failed" ? (
-                <AlertTriangle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+                <AppIcon name="warning" className="text-coral shrink-0 mt-0.5" />
               ) : (
                 <div className="h-4 w-4 rounded-full border border-border shrink-0 mt-0.5" />
               )}
@@ -530,7 +517,7 @@ function ClassifyProgress({ job }: { job: ClassifyJob }) {
                 {s.detail && (
                   <div
                     className={cn(
-                      "text-[11.5px] mt-0.5",
+                      "text-caption mt-0.5",
                       s.status === "failed" ? "text-coral" : "text-muted-foreground",
                     )}
                   >
@@ -542,7 +529,7 @@ function ClassifyProgress({ job }: { job: ClassifyJob }) {
           ))}
         </ul>
 
-        <div className="mt-5 rounded-md bg-muted/50 p-3 text-[11.5px] text-muted-foreground leading-relaxed">
+        <div className="mt-5 rounded-md bg-muted/50 p-3 text-caption text-muted-foreground leading-relaxed">
           Real classification — boundary conditions come from one call over the full set, then the
           register fills as parallel classification calls complete below.
         </div>
@@ -555,9 +542,9 @@ function ClassifyProgress({ job }: { job: ClassifyJob }) {
 function BoundaryConditionsCard({ conditions }: { conditions: BoundaryCondition[] }) {
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-semibold">Boundary conditions</CardTitle>
-        <div className="text-[11px] text-muted-foreground">
+      <CardHeader>
+        <CardTitle>Boundary conditions</CardTitle>
+        <div className="text-caption text-muted-foreground">
           Measurable thresholds that drive the CTS / CTQ decision — derived from the cited standards
         </div>
       </CardHeader>
@@ -576,18 +563,18 @@ function BoundaryConditionsCard({ conditions }: { conditions: BoundaryCondition[
           <TableBody>
             {conditions.map((bc) => (
               <TableRow key={bc.id}>
-                <TableCell className="tabular font-medium text-[12px]">{bc.id}</TableCell>
-                <TableCell className="text-[12.5px]">{bc.parameter}</TableCell>
-                <TableCell className="text-[12px]">{bc.threshold}</TableCell>
+                <TableCell className="tabular font-medium text-body-sm">{bc.id}</TableCell>
+                <TableCell className="text-body-sm">{bc.parameter}</TableCell>
+                <TableCell className="text-body-sm">{bc.threshold}</TableCell>
                 <TableCell>
-                  <Badge className={cn("text-[10.5px] border-0", classStyle[bc.drives])}>
+                  <Badge className={cn("text-caption border-0", classStyle[bc.drives])}>
                     {bc.drives}
                   </Badge>
                 </TableCell>
-                <TableCell className="tabular text-[12px] text-muted-foreground">
+                <TableCell className="tabular text-body-sm text-muted-foreground">
                   {bc.req_ids.length}
                 </TableCell>
-                <TableCell className="tabular text-[12px] text-muted-foreground">
+                <TableCell className="tabular text-body-sm text-muted-foreground">
                   {bc.source}
                 </TableCell>
               </TableRow>
@@ -617,7 +604,7 @@ function LiveRegister({
 
   if (rows.length === 0) {
     return (
-      <div className="py-8 text-center text-[12.5px] text-muted-foreground">
+      <div className="py-8 text-center text-body-sm text-muted-foreground">
         {running ? "Waiting for the first classified rows…" : "No rows classified."}
       </div>
     );
@@ -644,24 +631,24 @@ function LiveRegister({
             <TableRow key={r.req_id}>
               <TableCell className="tabular font-medium">{r.req_id}</TableCell>
               <TableCell
-                className="max-w-[320px] truncate text-[12.5px]"
+                className="max-w-[320px] truncate text-body-sm"
                 title={r.rationale ?? undefined}
               >
                 {r.statement}
               </TableCell>
               <TableCell>
-                <Badge className={cn("text-[10.5px] border-0", domainStyle[r.domain])}>
+                <Badge className={cn("text-caption border-0", domainStyle[r.domain])}>
                   {r.domain}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge className={cn("text-[10.5px] border-0", classStyle[r.classification])}>
+                <Badge className={cn("text-caption border-0", classStyle[r.classification])}>
                   {r.classification}
                 </Badge>
                 {r.changed && (
-                  <div className="mt-0.5 flex items-center gap-0.5 text-[10px] text-muted-foreground tabular">
+                  <div className="mt-0.5 flex items-center gap-0.5 text-micro text-muted-foreground tabular">
                     {r.prior_classification}
-                    <ArrowRight className="h-2.5 w-2.5" />
+                    <AppIcon name="arrowRight" size="xs" />
                     {r.classification}
                   </div>
                 )}
@@ -669,7 +656,7 @@ function LiveRegister({
               <TableCell>
                 <span
                   className={cn(
-                    "text-[12px]",
+                    "text-body-sm",
                     r.risk === "High" && "text-coral",
                     r.risk === "Medium" && "text-amber-brand",
                   )}
@@ -677,23 +664,23 @@ function LiveRegister({
                   {r.risk}
                 </span>
               </TableCell>
-              <TableCell className="tabular text-[12px]">{r.standard ?? "—"}</TableCell>
-              <TableCell className="tabular text-[12px] text-muted-foreground">
+              <TableCell className="tabular text-body-sm">{r.standard ?? "—"}</TableCell>
+              <TableCell className="tabular text-body-sm text-muted-foreground">
                 {r.bc_id ?? "—"}
               </TableCell>
               <TableCell>
-                <Badge className={cn("text-[10.5px] border-0", confidenceStyle[r.confidence])}>
+                <Badge className={cn("text-caption border-0", confidenceStyle[r.confidence])}>
                   {r.confidence}
                 </Badge>
               </TableCell>
               <TableCell>
                 {r.needs_review ? (
-                  <Badge className="text-[10.5px] border-0 bg-coral-soft text-coral">Review</Badge>
+                  <Badge className="text-caption border-0 bg-coral-soft text-coral">Review</Badge>
                 ) : (
-                  <Badge className="text-[10.5px] border-0 bg-success-soft text-success">OK</Badge>
+                  <Badge className="text-caption border-0 bg-success-soft text-success">OK</Badge>
                 )}
                 {!r.classified && (
-                  <div className="mt-0.5 text-[10px] text-muted-foreground">unclassified</div>
+                  <div className="mt-0.5 text-micro text-muted-foreground">unclassified</div>
                 )}
               </TableCell>
             </TableRow>
@@ -731,19 +718,19 @@ function SampleRegister({ filter }: { filter: Filter }) {
         {filtered.map((r) => (
           <TableRow key={r.id}>
             <TableCell className="tabular font-medium">{r.id}</TableCell>
-            <TableCell className="max-w-[320px] truncate text-[12.5px]">{r.statement}</TableCell>
+            <TableCell className="max-w-[320px] truncate text-body-sm">{r.statement}</TableCell>
             <TableCell>
-              <Badge className={cn("text-[10.5px] border-0", domainStyle[r.domain])}>
+              <Badge className={cn("text-caption border-0", domainStyle[r.domain])}>
                 {r.domain}
               </Badge>
             </TableCell>
             <TableCell>
-              <Badge className={cn("text-[10.5px] border-0", classStyle[r.class])}>{r.class}</Badge>
+              <Badge className={cn("text-caption border-0", classStyle[r.class])}>{r.class}</Badge>
             </TableCell>
             <TableCell>
               <span
                 className={cn(
-                  "text-[12px]",
+                  "text-body-sm",
                   r.risk === "High" && "text-coral",
                   r.risk === "Medium" && "text-amber-brand",
                 )}
@@ -751,13 +738,13 @@ function SampleRegister({ filter }: { filter: Filter }) {
                 {r.risk}
               </span>
             </TableCell>
-            <TableCell className="tabular text-[12px]">{r.standard}</TableCell>
-            <TableCell className="tabular text-[12px] text-muted-foreground">{r.bc}</TableCell>
-            <TableCell className="tabular text-[12px]">{r.coverage}%</TableCell>
+            <TableCell className="tabular text-body-sm">{r.standard}</TableCell>
+            <TableCell className="tabular text-body-sm text-muted-foreground">{r.bc}</TableCell>
+            <TableCell className="tabular text-body-sm">{r.coverage}%</TableCell>
             <TableCell>
               <Badge
                 className={cn(
-                  "text-[10.5px] border-0",
+                  "text-caption border-0",
                   r.result === "Pass" && "bg-success-soft text-success",
                   r.result === "Fail" && "bg-coral-soft text-coral",
                   r.result === "Running" && "bg-sw-soft text-sw",

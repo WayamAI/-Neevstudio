@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +15,6 @@ import {
 import { agentRuns } from "@/lib/mock-data";
 import { APP_NAME } from "@/lib/branding";
 import { cn } from "@/lib/utils";
-import { RefreshCw, XCircle } from "lucide-react";
 
 export const Route = createFileRoute("/_app/agent-runs")({
   head: () => ({
@@ -55,12 +55,12 @@ function AgentRunsPage() {
         ].map((s) => (
           <Card key={s.l}>
             <CardContent className="p-4">
-              <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">
+              <div className="text-caption uppercase tracking-wider text-muted-foreground">
                 {s.l}
               </div>
               <div
                 className={cn(
-                  "tabular text-2xl font-semibold mt-1",
+                  "tabular font-display text-display-xl mt-1",
                   s.tone === "success" && "text-success",
                   s.tone === "coral" && "text-coral",
                   s.tone === "amber" && "text-amber-brand",
@@ -75,8 +75,8 @@ function AgentRunsPage() {
       </div>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">Recent runs</CardTitle>
+        <CardHeader>
+          <CardTitle>Recent runs</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -96,28 +96,38 @@ function AgentRunsPage() {
               {agentRuns.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="tabular font-medium">{r.id}</TableCell>
-                  <TableCell className="text-[12.5px]">{r.agent}</TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">
+                  <TableCell className="text-body-sm">{r.agent}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground">
                     {r.triggeredBy}
                   </TableCell>
-                  <TableCell className="text-[12.5px]">{r.scope}</TableCell>
+                  <TableCell className="text-body-sm">{r.scope}</TableCell>
                   <TableCell>
-                    <Badge className={cn("text-[10.5px] border-0", statusStyle[r.status])}>
+                    <Badge className={cn("text-caption border-0", statusStyle[r.status])}>
                       {r.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="tabular text-[12px]">{r.duration}</TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">{r.when}</TableCell>
+                  <TableCell className="tabular text-body-sm">{r.duration}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground">{r.when}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       {r.status === "failed" && (
-                        <Button size="icon" variant="ghost" className="h-7 w-7">
-                          <RefreshCw className="h-3.5 w-3.5" />
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-7 w-7"
+                          aria-label={`Retry ${r.id}`}
+                        >
+                          <AppIcon name="refresh" size="sm" />
                         </Button>
                       )}
                       {r.status === "queued" && (
-                        <Button size="icon" variant="ghost" className="h-7 w-7">
-                          <XCircle className="h-3.5 w-3.5" />
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-7 w-7"
+                          aria-label={`Cancel ${r.id}`}
+                        >
+                          <AppIcon name="error" size="sm" />
                         </Button>
                       )}
                     </div>

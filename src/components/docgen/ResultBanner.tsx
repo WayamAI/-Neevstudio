@@ -1,5 +1,5 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import type { DocGenJob } from "@/lib/api";
-import { CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /** Terminal-status banner for a docgen job: outcome and duration. */
@@ -14,13 +14,15 @@ export function ResultBanner({ job }: { job: DocGenJob }) {
   const seconds = job.duration_ms ? (job.duration_ms / 1000).toFixed(1) : null;
 
   return (
-    <div className={cn("flex items-start gap-2 rounded-md border px-3.5 py-2.5 text-[13px]", tone)}>
+    <div
+      className={cn("flex items-start gap-2 rounded-md border px-3.5 py-2.5 text-label-md", tone)}
+    >
       {job.status === "succeeded" ? (
-        <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
+        <AppIcon name="success" className="text-success shrink-0 mt-0.5" />
       ) : job.status === "partial" ? (
-        <AlertTriangle className="h-4 w-4 text-amber-brand shrink-0 mt-0.5" />
+        <AppIcon name="warning" className="text-amber-brand shrink-0 mt-0.5" />
       ) : (
-        <XCircle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+        <AppIcon name="error" className="text-coral shrink-0 mt-0.5" />
       )}
       <div className="min-w-0">
         <span>

@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
@@ -8,7 +9,6 @@ import { breakdown, type BreakdownNode } from "@/lib/mock-data";
 import { APP_NAME } from "@/lib/branding";
 import { BreakdownTree } from "@/components/BreakdownTree";
 import { domainStyle } from "@/lib/breakdown-styles";
-import { MessageSquare, RefreshCw, GitBranch } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/breakdown")({
@@ -36,11 +36,11 @@ function BreakdownPage() {
         actions={
           <>
             <Button variant="outline" size="sm">
-              <GitBranch className="h-3.5 w-3.5 mr-1.5" />
+              <AppIcon name="branch" size="sm" className="mr-1.5" />
               Version history
             </Button>
             <Button size="sm">
-              <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+              <AppIcon name="refresh" size="sm" className="mr-1.5" />
               Re-decompose
             </Button>
           </>
@@ -57,10 +57,10 @@ function BreakdownPage() {
         ].map((s) => (
           <Card key={s.l}>
             <CardContent className="p-4">
-              <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">
+              <div className="text-caption uppercase tracking-wider text-muted-foreground">
                 {s.l}
               </div>
-              <div className="tabular text-2xl font-semibold mt-1">{s.v}</div>
+              <div className="tabular font-display text-display-xl mt-1">{s.v}</div>
             </CardContent>
           </Card>
         ))}
@@ -69,9 +69,9 @@ function BreakdownPage() {
       {/* Tree + detail */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Decomposition tree</CardTitle>
-            <div className="text-[11px] text-muted-foreground">
+          <CardHeader>
+            <CardTitle>Decomposition tree</CardTitle>
+            <div className="text-caption text-muted-foreground">
               Click a node to view details · re-decompose scoped to any subtree
             </div>
           </CardHeader>
@@ -83,28 +83,28 @@ function BreakdownPage() {
         </Card>
 
         <Card className="h-fit sticky top-20">
-          <CardHeader className="pb-2">
+          <CardHeader>
             <div className="flex items-center gap-2">
               <Badge
                 variant="outline"
-                className={cn("h-5 text-[10px] px-1.5 border-0", domainStyle[selected.domain])}
+                className={cn("h-5 text-micro px-1.5 border-0", domainStyle[selected.domain])}
               >
                 {selected.domain}
               </Badge>
-              <span className="tabular text-[11px] text-muted-foreground">{selected.id}</span>
-              <span className="ml-auto text-[11px] text-muted-foreground tabular">
+              <span className="tabular text-caption text-muted-foreground">{selected.id}</span>
+              <span className="ml-auto text-caption text-muted-foreground tabular">
                 L{selected.level}
               </span>
             </div>
             <CardTitle className="text-base mt-1">{selected.name}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-[12.5px] text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               Element responsible for {selected.name.toLowerCase()}. {selected.reqs} requirements
               resolve under this node.
             </p>
 
-            <dl className="grid grid-cols-2 gap-y-2 text-[12px]">
+            <dl className="grid grid-cols-2 gap-y-2 text-body-sm">
               <dt className="text-muted-foreground">Domain</dt>
               <dd>{selected.domain}</dd>
               <dt className="text-muted-foreground">Requirements</dt>
@@ -121,23 +121,23 @@ function BreakdownPage() {
 
             <div className="flex gap-2">
               <Button size="sm" className="flex-1">
-                <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+                <AppIcon name="refresh" size="sm" className="mr-1.5" />
                 Re-decompose
               </Button>
-              <Button variant="outline" size="sm">
-                <MessageSquare className="h-3.5 w-3.5" />
+              <Button variant="outline" size="sm" aria-label="Add comment">
+                <AppIcon name="comment" size="sm" />
               </Button>
             </div>
 
             <div>
-              <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
+              <div className="text-caption font-medium uppercase tracking-wider text-muted-foreground mb-2">
                 Comments
               </div>
               <div className="space-y-2">
-                <div className="rounded-md border border-border p-2.5 text-[12px]">
+                <div className="rounded-md border border-border p-2.5 text-body-sm">
                   <div className="flex items-center justify-between">
                     <span className="font-medium">R. Vasquez</span>
-                    <span className="tabular text-[10.5px] text-muted-foreground">3d ago</span>
+                    <span className="tabular text-caption text-muted-foreground">3d ago</span>
                   </div>
                   <div className="mt-1 text-foreground/85">
                     Split further per DFMEA review 3/12 — need dedicated inspiratory valve node.

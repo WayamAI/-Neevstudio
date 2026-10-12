@@ -3,17 +3,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+// Chronos StatusBadge: solid fill + white label for status, quiet pill otherwise.
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex max-w-full items-center gap-1 truncate rounded-full border border-transparent px-2.5 py-0.5 text-caption whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
   {
     variants: {
       variant: {
-        default: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive:
-          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-        outline: "text-foreground",
+        default: "border-muted bg-raised-2 text-secondary",
+        secondary: "bg-action text-secondary",
+        destructive: "border-error-stroke/50 bg-error-subtle text-error",
+        outline: "border-muted text-tertiary",
+        success: "border-success-stroke/50 bg-success-subtle text-success",
+        warning: "border-warning-stroke/50 bg-warning-subtle text-warning",
+        info: "border-info-stroke/50 bg-info-subtle text-info",
+        neutral: "border-neutral-stroke/50 bg-neutral-subtle text-neutral",
       },
     },
     defaultVariants: {

@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +18,6 @@ import {
 import { users, programs } from "@/lib/mock-data";
 import { APP_NAME } from "@/lib/branding";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { KeyRound, Bell } from "lucide-react";
 
 export const Route = createFileRoute("/_app/settings")({
   head: () => ({
@@ -47,10 +47,10 @@ function SettingsPage() {
 
         <TabsContent value="programs" className="mt-4 space-y-4">
           <Card>
-            <CardHeader className="pb-2 flex-row items-center justify-between">
+            <CardHeader className="flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-sm font-semibold">Programs</CardTitle>
-                <div className="text-[11px] text-muted-foreground">
+                <CardTitle>Programs</CardTitle>
+                <div className="text-caption text-muted-foreground">
                   Isolated per-program data, agents and approval routing
                 </div>
               </div>
@@ -71,11 +71,11 @@ function SettingsPage() {
                   {programs.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell className="font-medium">{p.name}</TableCell>
-                      <TableCell className="text-[12.5px] text-muted-foreground">
+                      <TableCell className="text-body-sm text-muted-foreground">
                         {p.subtitle}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary" className="text-[10.5px]">
+                        <Badge variant="secondary" className="text-caption">
                           {p.stage}
                         </Badge>
                       </TableCell>
@@ -91,10 +91,10 @@ function SettingsPage() {
 
         <TabsContent value="users" className="mt-4 space-y-4">
           <Card>
-            <CardHeader className="pb-2 flex-row items-center justify-between">
+            <CardHeader className="flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-sm font-semibold">Users</CardTitle>
-                <div className="text-[11px] text-muted-foreground">
+                <CardTitle>Users</CardTitle>
+                <div className="text-caption text-muted-foreground">
                   Role assignment is per-program, not global
                 </div>
               </div>
@@ -115,14 +115,14 @@ function SettingsPage() {
                     <TableRow key={u.name}>
                       <TableCell className="font-medium">{u.name}</TableCell>
                       <TableCell>
-                        <Badge variant="secondary" className="text-[10.5px]">
+                        <Badge variant="secondary" className="text-caption">
                           {u.role}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-[12px] text-muted-foreground">
+                      <TableCell className="text-body-sm text-muted-foreground">
                         {u.programs.join(", ")}
                       </TableCell>
-                      <TableCell className="text-[12px] text-muted-foreground tabular">
+                      <TableCell className="text-body-sm text-muted-foreground tabular">
                         {u.last}
                       </TableCell>
                     </TableRow>
@@ -135,9 +135,9 @@ function SettingsPage() {
 
         <TabsContent value="notifications" className="mt-4 space-y-4">
           <Card>
-            <CardHeader className="pb-2 flex-row items-center gap-2">
-              <Bell className="h-4 w-4 text-muted-foreground" />
-              <CardTitle className="text-sm font-semibold">Notification rules</CardTitle>
+            <CardHeader className="flex-row items-center gap-2">
+              <AppIcon name="notification" className="text-muted-foreground" />
+              <CardTitle>Notification rules</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -152,12 +152,12 @@ function SettingsPage() {
                     key={n.event}
                     className="flex items-center justify-between border-b border-border pb-3 last:border-0"
                   >
-                    <div className="text-[13px]">{n.event}</div>
+                    <div className="text-label-md">{n.event}</div>
                     <div className="flex items-center gap-6">
-                      <label className="flex items-center gap-2 text-[12px]">
+                      <label className="flex items-center gap-2 text-body-sm">
                         <Switch defaultChecked={n.inApp} /> In-app
                       </label>
-                      <label className="flex items-center gap-2 text-[12px]">
+                      <label className="flex items-center gap-2 text-body-sm">
                         <Switch defaultChecked={n.email} /> Email
                       </label>
                     </div>
@@ -170,18 +170,18 @@ function SettingsPage() {
 
         <TabsContent value="api" className="mt-4 space-y-4">
           <Card>
-            <CardHeader className="pb-2 flex-row items-center gap-2">
-              <KeyRound className="h-4 w-4 text-muted-foreground" />
-              <CardTitle className="text-sm font-semibold">API keys & webhooks</CardTitle>
+            <CardHeader className="flex-row items-center gap-2">
+              <AppIcon name="key" className="text-muted-foreground" />
+              <CardTitle>API keys & webhooks</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label className="text-[12px] text-muted-foreground">Production key</Label>
+                <Label className="text-body-sm text-muted-foreground">Production key</Label>
                 <div className="mt-1.5 flex gap-2">
                   <Input
                     readOnly
                     value="vt_live_9j3•••••••••••••••••••••••4kf2"
-                    className="tabular font-mono text-[12.5px]"
+                    className="tabular font-mono text-body-sm"
                   />
                   <Button variant="outline" size="sm">
                     Rotate
@@ -189,11 +189,11 @@ function SettingsPage() {
                 </div>
               </div>
               <div>
-                <Label className="text-[12px] text-muted-foreground">Webhook endpoint</Label>
+                <Label className="text-body-sm text-muted-foreground">Webhook endpoint</Label>
                 <div className="mt-1.5 flex gap-2">
                   <Input
                     placeholder="https://your-service/veritrace/webhook"
-                    className="text-[12.5px]"
+                    className="text-body-sm"
                   />
                   <Button size="sm">Save</Button>
                 </div>

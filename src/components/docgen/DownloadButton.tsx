@@ -1,11 +1,12 @@
+import { AppIcon } from "@/components/ui/app-icon";
+import type { IconName } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { API_URL, type FileInfo } from "@/lib/api";
-import { Download, FileSpreadsheet, FileText, FileArchive } from "lucide-react";
 
-const icons = {
-  docx: FileText,
-  csv: FileSpreadsheet,
-  zip: FileArchive,
+const icons: Partial<Record<FileInfo["kind"], IconName>> = {
+  docx: "document",
+  csv: "spreadsheet",
+  zip: "archive",
 };
 
 function humanSize(bytes: number): string {
@@ -23,14 +24,14 @@ export function DownloadButton({
   file: FileInfo;
   variant?: "outline" | "default";
 }) {
-  const Icon = icons[file.kind] ?? Download;
+  const icon = icons[file.kind] ?? "download";
   const size = humanSize(file.size_bytes);
   return (
     <Button variant={variant} size="sm" asChild>
       <a href={`${API_URL}${file.url}`} download={file.name}>
-        <Icon className="h-3.5 w-3.5 mr-1.5" />
+        <AppIcon name={icon} size="sm" className="mr-1.5" />
         {file.label}
-        {size && <span className="ml-1.5 text-[11px] opacity-60">{size}</span>}
+        {size && <span className="ml-1.5 text-caption opacity-60">{size}</span>}
       </a>
     </Button>
   );

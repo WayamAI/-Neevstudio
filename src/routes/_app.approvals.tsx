@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { approvals } from "@/lib/mock-data";
 import { APP_NAME } from "@/lib/branding";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, XCircle, MessageSquare, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_app/approvals")({
   head: () => ({
@@ -37,12 +37,12 @@ function ApprovalsPage() {
         ].map((s) => (
           <Card key={s.l}>
             <CardContent className="p-4">
-              <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">
+              <div className="text-caption uppercase tracking-wider text-muted-foreground">
                 {s.l}
               </div>
               <div
                 className={cn(
-                  "tabular text-2xl font-semibold mt-1",
+                  "tabular font-display text-display-xl mt-1",
                   s.tone === "coral" && "text-coral",
                   s.tone === "amber" && "text-amber-brand",
                 )}
@@ -57,7 +57,7 @@ function ApprovalsPage() {
       <div className="space-y-3">
         {approvals.map((a) => (
           <Card key={a.id}>
-            <CardContent className="p-5">
+            <CardContent>
               <div className="flex items-start gap-4">
                 <div
                   className={cn(
@@ -69,17 +69,17 @@ function ApprovalsPage() {
                         : "bg-secondary text-muted-foreground",
                   )}
                 >
-                  <ShieldCheck className="h-4 w-4" />
+                  <AppIcon name="compliance" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[13.5px] font-semibold">{a.kind}</span>
-                    <Badge variant="secondary" className="tabular text-[10.5px]">
+                    <span className="text-label-md font-semibold">{a.kind}</span>
+                    <Badge variant="secondary" className="tabular text-caption">
                       {a.entity}
                     </Badge>
                     <Badge
                       className={cn(
-                        "text-[10.5px] border-0 ml-auto",
+                        "text-caption border-0 ml-auto",
                         a.priority === "High" && "bg-coral-soft text-coral",
                         a.priority === "Medium" && "bg-amber-soft text-amber-brand",
                         a.priority === "Low" && "bg-secondary text-muted-foreground",
@@ -88,8 +88,8 @@ function ApprovalsPage() {
                       {a.priority}
                     </Badge>
                   </div>
-                  <p className="mt-1.5 text-[13px] text-foreground/85">{a.proposal}</p>
-                  <div className="mt-2 flex items-center gap-3 text-[11.5px] text-muted-foreground tabular">
+                  <p className="mt-1.5 text-label-md text-foreground/85">{a.proposal}</p>
+                  <div className="mt-2 flex items-center gap-3 text-caption text-muted-foreground tabular">
                     <span>
                       Proposed by <span className="text-foreground/80">{a.by}</span>
                     </span>
@@ -99,15 +99,15 @@ function ApprovalsPage() {
                 </div>
                 <div className="flex gap-2 shrink-0">
                   <Button size="sm" variant="outline">
-                    <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
+                    <AppIcon name="comment" size="sm" className="mr-1.5" />
                     Comment
                   </Button>
                   <Button size="sm" variant="outline">
-                    <XCircle className="h-3.5 w-3.5 mr-1.5" />
+                    <AppIcon name="error" size="sm" className="mr-1.5" />
                     Reject
                   </Button>
                   <Button size="sm">
-                    <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
+                    <AppIcon name="success" size="sm" className="mr-1.5" />
                     Approve
                   </Button>
                 </div>

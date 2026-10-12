@@ -1,159 +1,193 @@
+import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
+import { AppIcon } from "@/components/ui/app-icon";
 import { APP_NAME, APP_TAGLINE } from "@/lib/branding";
-import {
-  LayoutDashboard,
-  FilePlus2,
-  FileOutput,
-  Network,
-  ShieldCheck,
-  ListChecks,
-  FlaskConical,
-  Cpu,
-  Waypoints,
-  Bot,
-  ClipboardCheck,
-  FileBarChart,
-  Settings,
-  Plug,
-  History,
-  Activity,
-} from "lucide-react";
+import { useTheme } from "@/lib/theme-context";
+import { NAV_GROUPS, navItemForPath } from "@/lib/navigation";
+import { SidebarItem } from "@/components/layout/SidebarItem";
 
-const groups = [
-  {
-    label: "Lifecycle",
-    items: [
-      { to: "/", label: "Overview", icon: LayoutDashboard },
-      { to: "/new-breakdown", label: "New Breakdown", icon: FilePlus2 },
-      { to: "/requirements-matrix", label: "Requirements Matrix", icon: FileOutput },
-      { to: "/breakdown", label: "Product Breakdown", icon: Network, meta: "428 req" },
-      { to: "/compliance", label: "Compliance & Standards", icon: ShieldCheck, meta: "10" },
-      { to: "/classification", label: "CTS / CTQ Classification", icon: ListChecks },
-      { to: "/verification", label: "Verification (V-Model)", icon: FlaskConical, meta: "87%" },
-      { to: "/hardware", label: "Hardware & BOM", icon: Cpu, meta: "342" },
-    ],
-  },
-  {
-    label: "Traceability",
-    items: [{ to: "/traceability", label: "Traceability Explorer", icon: Waypoints }],
-  },
-  {
-    label: "Platform",
-    items: [
-      { to: "/capabilities", label: "AI Capability Map", icon: Bot },
-      {
-        to: "/agent-runs",
-        label: "Agent Runs / Queue",
-        icon: Activity,
-        badge: "2 failed",
-        tone: "coral" as const,
-      },
-      {
-        to: "/approvals",
-        label: "Approvals Queue",
-        icon: ClipboardCheck,
-        badge: "6 pending",
-        tone: "amber" as const,
-      },
-    ],
-  },
-  {
-    label: "Reports",
-    items: [{ to: "/reports", label: "Reports & Exports", icon: FileBarChart }],
-  },
-  {
-    label: "Settings",
-    items: [
-      { to: "/integrations", label: "Integrations", icon: Plug },
-      { to: "/audit", label: "Audit Trail", icon: History },
-      { to: "/settings", label: "Settings", icon: Settings },
-    ],
-  },
-];
+/**
+ * Primary navigation: every Nirmiti page is its own item with its own icon,
+ * in the original sections. Collapsed (68px) shows icons with tooltips;
+ * expanded (252px) and the mobile drawer show section labels and item labels.
+ * The expanded preference is remembered per browser.
+ */
 
-/** Nav content shared by the desktop rail and the mobile sheet. */
-export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
-  const { location } = useRouterState();
-  const path = location.pathname;
+const EXPANDED_KEY = "neevstudio-sidebar-expanded";
+const BUILD = "v2.14.0 · build 8842";
+
+function readExpanded() {
+  try {
+    return localStorage.getItem(EXPANDED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function Logo({ wordmark }: { wordmark: boolean }) {
+  return (
+    <Link
+      to="/"
+      aria-label={`${APP_NAME} home`}
+      title={wordmark ? undefined : `${APP_NAME} — ${APP_TAGLINE}`}
+      className="flex min-w-0 items-center gap-2.5 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      {wordmark ? (
+        <>
+          <img
+            src="/brand/wayam-logo-dark-bg-cropped.svg"
+            alt="Wayam AI"
+            width={748}
+            height={427}
+            className="hidden h-8 w-auto shrink-0 dark:block"
+          />
+          <img
+            src="/brand/wayam-logo-light-bg-cropped.svg"
+            alt="Wayam AI"
+            width={748}
+            height={427}
+            className="h-8 w-auto shrink-0 dark:hidden"
+          />
+          <span className="min-w-0 border-l border-muted pl-2.5">
+            <span className="block truncate font-display text-display-base text-primary">
+              {APP_NAME}
+            </span>
+            <span className="block truncate text-micro text-quaternary">{BUILD}</span>
+          </span>
+        </>
+      ) : (
+        <img
+          src="/brand/favicon.svg"
+          alt=""
+          width={32}
+          height={32}
+          className="size-8 shrink-0 rounded-[10px]"
+        />
+      )}
+    </Link>
+  );
+}
+
+export function Sidebar({ open = false, onClose }: { open?: boolean; onClose?: () => void }) {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const { theme, toggle: toggleTheme } = useTheme();
+  const [expanded, setExpanded] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const activeItem = navItemForPath(path);
+  const showExpanded = expanded || open;
+  const isDark = theme === "dark";
+
+  useEffect(() => setExpanded(readExpanded()), []);
+
+  // Keep the active item visible when the list is taller than the viewport.
+  useEffect(() => {
+    navRef.current?.querySelector("[aria-current=page]")?.scrollIntoView({ block: "nearest" });
+  }, [path, showExpanded]);
+
+  function toggleExpanded() {
+    const next = !expanded;
+    setExpanded(next);
+    try {
+      localStorage.setItem(EXPANDED_KEY, String(next));
+    } catch {
+      /* storage blocked */
+    }
+  }
 
   return (
-    <>
-      <div className="flex flex-col items-center gap-2 px-5 py-6 border-b border-sidebar-border">
-        <img
-          src="/brand/wayam-logo-dark-bg.svg"
-          alt="Wayam AI"
-          className="h-9 w-auto"
-          width={220}
-          height={62}
-        />
-        <div className="text-[10.5px] tracking-wide text-sidebar-foreground/70 text-center">
-          {APP_NAME} - {APP_TAGLINE}
-        </div>
+    <aside
+      aria-label="Primary"
+      data-expanded={showExpanded}
+      className={cn(
+        "flex h-full shrink-0 flex-col border-r border-muted bg-container",
+        "transition-[width,transform] duration-200 ease-out",
+        "fixed inset-y-0 left-0 z-50 lg:relative lg:z-30 lg:translate-x-0",
+        showExpanded ? "w-[252px]" : "w-[68px]",
+        open
+          ? "translate-x-0"
+          : "pointer-events-none -translate-x-full lg:pointer-events-auto lg:translate-x-0",
+      )}
+    >
+      <div
+        className={cn(
+          "flex h-14 shrink-0 items-center border-b border-muted",
+          showExpanded ? "px-4" : "justify-center",
+        )}
+      >
+        <Logo wordmark={showExpanded} />
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {groups.map((group) => (
-          <div key={group.label}>
-            <div className="px-2.5 mb-1.5 text-[10.5px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-              {group.label}
-            </div>
-            <ul className="space-y-0.5">
-              {group.items.map((item) => {
-                const active = path === item.to || (item.to !== "/" && path.startsWith(item.to));
-                const Icon = item.icon;
-                return (
-                  <li key={item.to}>
-                    <Link
-                      to={item.to}
-                      onClick={onNavigate}
-                      className={cn(
-                        "group flex items-center gap-2.5 rounded-md px-2.5 py-2 lg:py-1.5 text-[13px] transition-colors",
-                        active
-                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                          : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
-                      )}
-                    >
-                      <Icon
-                        className={cn("h-4 w-4 shrink-0", active ? "text-primary" : "opacity-75")}
-                      />
-                      <span className="flex-1 truncate">{item.label}</span>
-                      {"meta" in item && item.meta && (
-                        <span className="tabular text-[10.5px] text-sidebar-foreground/60">
-                          {item.meta}
-                        </span>
-                      )}
-                      {"badge" in item && item.badge && (
-                        <span
-                          className={cn(
-                            "tabular rounded-full px-1.5 py-0.5 text-[10px] font-medium",
-                            item.tone === "coral" && "bg-coral/20 text-coral",
-                            item.tone === "amber" && "bg-amber-brand/20 text-amber-brand",
-                          )}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
+      <nav
+        ref={navRef}
+        aria-label="Main navigation"
+        className={cn(
+          "min-h-0 flex-1 overflow-x-hidden overflow-y-auto py-3",
+          showExpanded ? "px-3" : "px-[14px]",
+        )}
+      >
+        {NAV_GROUPS.map((group, gi) => (
+          <div key={group.id} className={cn(gi > 0 && (showExpanded ? "mt-4" : "mt-2"))}>
+            {showExpanded ? (
+              <p className="mb-1.5 px-1 text-caption tracking-[0.08em] text-quaternary uppercase">
+                {group.label}
+              </p>
+            ) : (
+              gi > 0 && (
+                <div aria-hidden className="mx-auto mb-2 h-px w-6 bg-[var(--stroke-muted)]" />
+              )
+            )}
+            <ul aria-label={group.label} className="flex flex-col gap-1.5">
+              {group.items.map((item) => (
+                <li key={item.href}>
+                  <SidebarItem
+                    {...item}
+                    active={activeItem?.href === item.href}
+                    expanded={showExpanded}
+                    onNavigate={onClose}
+                  />
+                </li>
+              ))}
             </ul>
           </div>
         ))}
       </nav>
 
-      <div className="border-t border-sidebar-border px-4 py-3 text-[11px] text-sidebar-foreground/60">
-        v2.14.0 · build 8842
+      <div
+        className={cn(
+          "flex shrink-0 flex-col gap-1.5 border-t border-muted py-3",
+          showExpanded ? "px-3" : "px-[14px]",
+        )}
+      >
+        <div className="hidden lg:contents">
+          <SidebarItem
+            icon={showExpanded ? "sidebarClose" : "sidebarOpen"}
+            label={showExpanded ? "Collapse sidebar" : "Expand sidebar"}
+            onClick={toggleExpanded}
+            expanded={showExpanded}
+          />
+        </div>
+        <SidebarItem
+          icon={isDark ? "sun" : "moon"}
+          label={isDark ? "Switch to light" : "Switch to dark"}
+          onClick={toggleTheme}
+          expanded={showExpanded}
+        />
       </div>
-    </>
+    </aside>
   );
 }
 
-export function Sidebar() {
+/** Mobile-only control; lives in the top bar, not the rail. */
+export function SidebarMenuButton({ onClick }: { onClick: () => void }) {
   return (
-    <aside className="hidden lg:flex h-screen w-[260px] shrink-0 flex-col bg-sidebar text-sidebar-foreground sticky top-0">
-      <SidebarNav />
-    </aside>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Open navigation"
+      className="flex size-8 items-center justify-center rounded-full bg-action text-icon-tertiary outline-none transition-colors duration-[180ms] hover:bg-raised-2 hover:text-icon-secondary focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+    >
+      <AppIcon name="menu" />
+    </button>
   );
 }

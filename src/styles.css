@@ -1,42 +1,155 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-
-/* Google Sans — self-hosted (see public/fonts). Referenced by --font-sans below. */
-@font-face {
-  font-family: "Google Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/GoogleSans-Regular.woff") format("woff");
-}
-@font-face {
-  font-family: "Google Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/GoogleSans-Medium.woff") format("woff");
-}
-@font-face {
-  font-family: "Google Sans";
-  font-style: normal;
-  font-weight: 600 700;
-  font-display: swap;
-  src: url("/fonts/GoogleSans-Bold.woff") format("woff");
-}
+@import "./tokens.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Google Sans", "Product Sans", Inter, ui-sans-serif, system-ui, sans-serif;
+  /* Typography families — Geist = interface, Michroma = display/identity */
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Michroma", "Geist", ui-sans-serif, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  /* Semantic type scale → text-display-page, text-body-sm, … */
+  --text-display-metric-xl: 56px;
+  --text-display-metric-xl--line-height: 1;
+  --text-display-metric-xl--letter-spacing: -0.03em;
+  --text-display-metric: 40px;
+  --text-display-metric--line-height: 1.05;
+  --text-display-metric--letter-spacing: -0.03em;
+  --text-display-page: 34px;
+  --text-display-page--line-height: 1.1;
+  --text-display-page--letter-spacing: -0.02em;
+  --text-display-xl: 22px;
+  --text-display-xl--line-height: 1.2;
+  --text-display-xl--letter-spacing: -0.01em;
+  --text-display-lg: 18px;
+  --text-display-lg--line-height: 1.25;
+  --text-display-lg--letter-spacing: -0.01em;
+  --text-display-base: 14px;
+  --text-display-base--line-height: 1.4;
+  --text-display-base--letter-spacing: -0.01em;
 
+  --text-display-2xl: 28px;
+  --text-display-2xl--line-height: 1.15;
+  --text-display-2xl--letter-spacing: -0.02em;
+  --text-display-3xl: 34px;
+  --text-display-3xl--line-height: 1.12;
+  --text-display-3xl--letter-spacing: -0.02em;
+  --text-heading-lg: 24px;
+  --text-heading-lg--line-height: 30px;
+  --text-heading-lg--font-weight: 600;
+  --text-heading-lg--letter-spacing: -0.015em;
+  --text-heading-md: 18px;
+  --text-heading-md--line-height: 24px;
+  --text-heading-md--font-weight: 600;
+  --text-heading-md--letter-spacing: -0.01em;
+  --text-heading-sm: 16px;
+  --text-heading-sm--line-height: 22px;
+  --text-heading-sm--font-weight: 600;
+  --text-heading-sm--letter-spacing: -0.01em;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+  --text-body-lg--letter-spacing: -0.01em;
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-body-md--letter-spacing: -0.01em;
+  --text-body-sm: 12px;
+  --text-body-sm--line-height: 16px;
+  --text-body-sm--letter-spacing: -0.01em;
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--font-weight: 500;
+  --text-label-sm: 12px;
+  --text-label-sm--line-height: 16px;
+  --text-label-sm--font-weight: 500;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 500;
+  --text-micro: 11px;
+  --text-micro--line-height: 14px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-control: var(--radius-control);
+  --radius-card: var(--radius-card);
+  --radius-panel: var(--radius-panel);
+
+  /* ---- Semantic color utilities ---------------------------------------- */
+  /* Surfaces: bg-page, bg-container, bg-raised, bg-raised-2, bg-action */
+  --color-page: var(--surface-page-background);
+  --color-container: var(--surface-container);
+  --color-raised: var(--surface-raised);
+  --color-raised-2: var(--surface-raised-x2);
+  --color-action: var(--surface-action);
+  --color-overlay: var(--surface-overlay);
+
+  /* Action surfaces */
+  --color-action-primary: var(--action-primary-default);
+  --color-action-primary-hover: var(--action-primary-hover);
+  --color-action-primary-content: var(--action-primary-content);
+  --color-action-secondary: var(--action-secondary-default);
+  --color-action-secondary-hover: var(--action-secondary-hover);
+  --color-action-tertiary-hover: var(--action-tertiary-hover);
+  --color-action-tertiary-focused: var(--action-tertiary-focused);
+
+  /* Text: text-primary, text-secondary, text-tertiary, text-quaternary, text-on-color */
+  --text-color-primary: var(--text-primary);
+  --text-color-secondary: var(--text-secondary);
+  --text-color-tertiary: var(--text-tertiary);
+  --text-color-quaternary: var(--text-quaternary);
+  --text-color-on-color: var(--text-on-color);
+  --text-color-success: var(--feedback-success-content);
+  --text-color-info: var(--feedback-info-content);
+  --text-color-warning: var(--feedback-warning-content);
+  --text-color-error: var(--feedback-error-content);
+  --text-color-neutral: var(--feedback-neutral-content);
+
+  /* Icons: text-icon-primary … text-icon-on-color, text-icon-success … */
+  --color-icon-primary: var(--icon-primary);
+  --color-icon-secondary: var(--icon-secondary);
+  --color-icon-tertiary: var(--icon-tertiary);
+  --color-icon-quaternary: var(--icon-quaternary);
+  --color-icon-on-color: var(--icon-on-color);
+  --color-icon-success: var(--feedback-success-icon);
+  --color-icon-info: var(--feedback-info-icon);
+  --color-icon-warning: var(--feedback-warning-icon);
+  --color-icon-error: var(--feedback-error-icon);
+
+  /* Strokes: border-default, border-active, border-muted, border-disabled, border-focus */
+  --border-color-default: var(--stroke-default);
+  --border-color-active: var(--stroke-active);
+  --border-color-muted: var(--stroke-muted);
+  --border-color-disabled: var(--stroke-disabled);
+  --border-color-focus: var(--stroke-focus);
+
+  /* Feedback: bg-error-subtle, border-error-stroke … */
+  --color-success-subtle: var(--feedback-success-background);
+  --color-success-stroke: var(--feedback-success-stroke);
+  --color-info-subtle: var(--feedback-info-background);
+  --color-info-stroke: var(--feedback-info-stroke);
+  --color-warning-subtle: var(--feedback-warning-background);
+  --color-warning-stroke: var(--feedback-warning-stroke);
+  --color-error-subtle: var(--feedback-error-background);
+  --color-error-stroke: var(--feedback-error-stroke);
+  --color-neutral-subtle: var(--feedback-neutral-background);
+  --color-neutral-stroke: var(--feedback-neutral-stroke);
+
+  /* Solid badges: bg-success-badge … with text-badge */
+  --color-success-badge: var(--feedback-success-badge);
+  --color-info-badge: var(--feedback-info-badge);
+  --color-neutral-badge: var(--feedback-neutral-badge);
+  --color-warning-badge: var(--feedback-warning-badge);
+  --color-error-badge: var(--feedback-error-badge);
+  --color-badge: var(--feedback-badge-content);
+
+  /* ---- shadcn/ui + legacy compatibility (mapped in tokens.css) ---------- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -57,7 +170,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Semantic domain + status tokens */
   --color-teal: var(--teal);
   --color-teal-soft: var(--teal-soft);
   --color-coral: var(--coral);
@@ -89,134 +201,48 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06);
-  --shadow-elevated: 0 4px 12px -2px rgb(15 23 42 / 0.08), 0 2px 6px -1px rgb(15 23 42 / 0.05);
+  --shadow-card: var(--shadow-subtle);
+  --shadow-elevated: var(--shadow-popover);
 }
 
-/* LIGHT MODE — clinical instrument panel */
-:root {
-  --radius: 0.625rem;
-
-  --porcelain: oklch(0.985 0.004 40);
-  --background: oklch(0.985 0.004 40);
-  --foreground: oklch(0.18 0.02 40);
-
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 40);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 40);
-
-  --ink: oklch(0.22 0.03 40); /* deep warm ink */
-  --ink-foreground: oklch(0.96 0.005 40);
-
-  --primary: oklch(0.646 0.222 41.116); /* Wayam AI orange */
-  --primary-foreground: oklch(0.99 0 0);
-
-  --secondary: oklch(0.96 0.006 40);
-  --secondary-foreground: oklch(0.22 0.03 40);
-
-  --muted: oklch(0.965 0.006 40);
-  --muted-foreground: oklch(0.5 0.015 40);
-
-  --accent: oklch(0.96 0.045 50);
-  --accent-foreground: oklch(0.22 0.03 40);
-
-  --destructive: oklch(0.62 0.19 22);
-  --destructive-foreground: oklch(0.99 0 0);
-
-  --border: oklch(0.92 0.009 40);
-  --input: oklch(0.92 0.009 40);
-  --ring: oklch(0.646 0.222 41.116);
-
-  /* Domain + status — all warm/orange family; distinguished by lightness &
-     hue-shift within orange-red-amber, not by leaving the family. */
-  --teal: oklch(0.58 0.18 35); /* rust — was cool teal */
-  --teal-soft: oklch(0.94 0.045 35);
-  --coral: oklch(0.65 0.19 22);
-  --coral-soft: oklch(0.95 0.04 22);
-  --amber-brand: oklch(0.75 0.14 75);
-  --amber-soft: oklch(0.96 0.05 85);
-  --sw: oklch(0.74 0.13 80); /* gold — was software blue */
-  --sw-soft: oklch(0.96 0.035 80);
-  --hw: oklch(0.48 0.19 28); /* burnt orange — was hardware violet */
-  --hw-soft: oklch(0.93 0.05 28);
-  --success: oklch(0.58 0.14 152);
-  --success-soft: oklch(0.94 0.05 152);
-
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.74 0.13 80);
-  --chart-3: oklch(0.48 0.19 28);
-  --chart-4: oklch(0.75 0.14 75);
-  --chart-5: oklch(0.65 0.19 22);
-
-  --sidebar: oklch(0.22 0.035 40);
-  --sidebar-foreground: oklch(0.85 0.015 40);
-  --sidebar-primary: oklch(0.646 0.222 41.116);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.28 0.04 40);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.3 0.035 40);
-  --sidebar-ring: oklch(0.646 0.222 41.116);
+/* Icon primitive sizing (consumed by <AppIcon size=…>) */
+@utility icon-xs {
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
+}
+@utility icon-sm {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+@utility icon-md {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+@utility icon-lg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+@utility icon-xl {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+}
+@utility icon-2xl {
+  width: var(--icon-size-2xl);
+  height: var(--icon-size-2xl);
+}
+@utility icon-3xl {
+  width: var(--icon-size-3xl);
+  height: var(--icon-size-3xl);
 }
 
-.dark {
-  --background: oklch(0.15 0.018 40);
-  --foreground: oklch(0.95 0.005 40);
-
-  --card: oklch(0.19 0.022 40);
-  --card-foreground: oklch(0.95 0.005 40);
-  --popover: oklch(0.19 0.022 40);
-  --popover-foreground: oklch(0.95 0.005 40);
-
-  --ink: oklch(0.12 0.018 40);
-  --ink-foreground: oklch(0.96 0.005 40);
-
-  --primary: oklch(0.75 0.183 55.934); /* Wayam AI orange, brightened for dark bg */
-  --primary-foreground: oklch(0.15 0.02 40);
-
-  --secondary: oklch(0.24 0.028 40);
-  --secondary-foreground: oklch(0.95 0.005 40);
-
-  --muted: oklch(0.23 0.022 40);
-  --muted-foreground: oklch(0.68 0.018 40);
-
-  --accent: oklch(0.3 0.075 50);
-  --accent-foreground: oklch(0.95 0.005 40);
-
-  --destructive: oklch(0.68 0.19 22);
-  --destructive-foreground: oklch(0.99 0 0);
-
-  --border: oklch(0.28 0.028 40);
-  --input: oklch(0.28 0.028 40);
-  --ring: oklch(0.75 0.183 55.934);
-
-  --teal: oklch(0.72 0.16 38); /* rust, brightened for dark bg */
-  --teal-soft: oklch(0.3 0.07 35);
-  --coral: oklch(0.72 0.18 22);
-  --coral-soft: oklch(0.32 0.08 22);
-  --amber-brand: oklch(0.8 0.14 75);
-  --amber-soft: oklch(0.32 0.08 75);
-  --sw: oklch(0.82 0.12 82); /* gold */
-  --sw-soft: oklch(0.32 0.07 80);
-  --hw: oklch(0.62 0.18 30); /* burnt orange */
-  --hw-soft: oklch(0.3 0.08 28);
-  --success: oklch(0.7 0.14 152);
-  --success-soft: oklch(0.3 0.08 152);
-
-  --chart-1: oklch(0.75 0.183 55.934);
-  --chart-2: oklch(0.82 0.12 82);
-  --chart-3: oklch(0.62 0.18 30);
-  --chart-4: oklch(0.8 0.14 75);
-  --chart-5: oklch(0.72 0.18 22);
-
-  --sidebar: oklch(0.12 0.018 40);
-  --sidebar-foreground: oklch(0.85 0.018 40);
-  --sidebar-primary: oklch(0.75 0.183 55.934);
-  --sidebar-primary-foreground: oklch(0.15 0.02 40);
-  --sidebar-accent: oklch(0.2 0.028 40);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.24 0.028 40);
-  --sidebar-ring: oklch(0.75 0.183 55.934);
+/* Small uppercase section label (Geist, tracked) */
+@utility type-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  line-height: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 @utility tabular {
@@ -278,10 +304,32 @@
   }
   html,
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--surface-page-background);
+    color: var(--text-secondary);
     font-family: var(--font-sans);
+    font-size: 14px;
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background: var(--stroke-active);
+    color: var(--text-primary);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-scroll-bar) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-scroll-bar);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
   /* Tabular numerals globally on numeric-heavy elements */
   .tabular,

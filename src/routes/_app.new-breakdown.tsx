@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
@@ -46,21 +47,6 @@ import {
   type JobState,
   type Origin,
 } from "@/lib/api";
-import {
-  UploadCloud,
-  FileText,
-  Download,
-  Eye,
-  ListChecks,
-  Loader2,
-  CheckCircle2,
-  ArrowRight,
-  RotateCcw,
-  Sparkles,
-  AlertTriangle,
-  XCircle,
-  Wand2,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/new-breakdown")({
@@ -193,7 +179,7 @@ function NewBreakdownPage() {
         actions={
           active ? (
             <Button variant="outline" size="sm" onClick={reset}>
-              <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
+              <AppIcon name="undo" size="sm" className="mr-1.5" />
               Start over
             </Button>
           ) : undefined
@@ -201,8 +187,8 @@ function NewBreakdownPage() {
       />
 
       {error && (
-        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-[13px]">
-          <XCircle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-label-md">
+          <AppIcon name="error" className="text-coral shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
@@ -292,11 +278,11 @@ function IntakeView({
           <Tabs value={tab} onValueChange={(v) => setTab(v as "upload" | "concept")}>
             <TabsList className="mb-3">
               <TabsTrigger value="upload">
-                <UploadCloud className="h-3.5 w-3.5 mr-1.5" />
+                <AppIcon name="uploadCloud" size="sm" className="mr-1.5" />
                 Upload a document
               </TabsTrigger>
               <TabsTrigger value="concept">
-                <Wand2 className="h-3.5 w-3.5 mr-1.5" />
+                <AppIcon name="magic" size="sm" className="mr-1.5" />
                 Describe a concept
               </TabsTrigger>
             </TabsList>
@@ -323,16 +309,16 @@ function IntakeView({
               >
                 <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                   {submitting ? (
-                    <Loader2 className="h-6 w-6 animate-spin" />
+                    <AppIcon name="spinner" size="2xl" className="animate-spin" />
                   ) : (
-                    <UploadCloud className="h-6 w-6" />
+                    <AppIcon name="uploadCloud" size="2xl" />
                   )}
                 </div>
                 <div>
-                  <div className="text-[15px] font-semibold">
+                  <div className="text-body-md font-semibold">
                     {submitting ? "Reading document…" : "Drop a requirements document here"}
                   </div>
-                  <div className="text-[12.5px] text-muted-foreground mt-0.5">
+                  <div className="text-body-sm text-muted-foreground mt-0.5">
                     or click to browse · .docx, .pdf, .md, .txt
                   </div>
                 </div>
@@ -363,9 +349,9 @@ function IntakeView({
 
       {tab === "upload" ? (
         <Card className="h-fit">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Scope document</CardTitle>
-            <div className="text-[11px] text-muted-foreground">
+          <CardHeader>
+            <CardTitle>Scope document</CardTitle>
+            <div className="text-caption text-muted-foreground">
               Don't have one? Start from the sample.
             </div>
           </CardHeader>
@@ -376,14 +362,14 @@ function IntakeView({
               className="w-full justify-start"
               onClick={onDownloadSample}
             >
-              <Download className="h-3.5 w-3.5 mr-2" />
+              <AppIcon name="download" size="sm" className="mr-2" />
               Download sample scope
             </Button>
 
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm" className="w-full justify-start">
-                  <Eye className="h-3.5 w-3.5 mr-2" />
+                  <AppIcon name="view" size="sm" className="mr-2" />
                   Preview scope format
                 </Button>
               </DialogTrigger>
@@ -394,14 +380,14 @@ function IntakeView({
                     A structured requirements document works best — but any readable scope will do.
                   </DialogDescription>
                 </DialogHeader>
-                <pre className="max-h-[60vh] overflow-auto rounded-md border border-border bg-muted/40 p-4 text-[12px] leading-relaxed whitespace-pre-wrap font-mono">
+                <pre className="max-h-[60vh] overflow-auto rounded-md border border-border bg-muted/40 p-4 text-body-sm leading-relaxed whitespace-pre-wrap font-mono">
                   {sampleScopeDoc}
                 </pre>
               </DialogContent>
             </Dialog>
 
-            <div className="rounded-md bg-muted/50 p-3 text-[11.5px] text-muted-foreground leading-relaxed">
-              <Sparkles className="h-3.5 w-3.5 inline -mt-0.5 mr-1 text-primary" />
+            <div className="rounded-md bg-muted/50 p-3 text-caption text-muted-foreground leading-relaxed">
+              <AppIcon name="sparkle" size="sm" className="inline -mt-0.5 mr-1 text-primary" />
               {APP_NAME} decomposes the scope into hardware, software and labelling requirements —
               classified CTS/CTQ, traced to a parent PRD, and carrying measurable acceptance
               criteria.
@@ -414,8 +400,8 @@ function IntakeView({
         <div className="space-y-4">
           <Card>
             <CardContent className="p-4 space-y-2.5">
-              <div className="text-[13px] font-semibold">What gets exported</div>
-              <ul className="text-[12px] text-muted-foreground space-y-1.5 leading-relaxed">
+              <div className="text-label-md font-semibold">What gets exported</div>
+              <ul className="text-body-sm text-muted-foreground space-y-1.5 leading-relaxed">
                 <li>
                   <span className="font-medium text-foreground">Document set</span> — four Word
                   documents (Product, Hardware, Software, Labeling) with numbered sections and
@@ -442,32 +428,32 @@ function ProgressView({ job }: { job: JobState }) {
 
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent>
         <div className="flex items-center gap-3">
-          <Loader2 className="h-5 w-5 text-primary animate-spin" />
+          <AppIcon name="spinner" size="xl" className="text-primary animate-spin" />
           <div className="min-w-0">
-            <div className="text-[14px] font-semibold">
+            <div className="text-body-md font-semibold">
               {job.source_kind === "document" ? "Analyzing document…" : "Generating requirements…"}
             </div>
-            <div className="text-[12px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
-              <FileText className="h-3.5 w-3.5 shrink-0" />
+            <div className="text-body-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
+              <AppIcon name="document" size="sm" className="shrink-0" />
               <span className="truncate">{job.source_name}</span>
             </div>
           </div>
-          <div className="ml-auto tabular text-[12px] text-muted-foreground">{pct}%</div>
+          <div className="ml-auto tabular text-body-sm text-muted-foreground">{pct}%</div>
         </div>
 
         <Progress value={pct} className="h-1.5 mt-4" />
 
         <ul className="mt-5 space-y-2.5">
           {job.stages.map((s) => (
-            <li key={s.key} className="flex items-start gap-2.5 text-[13px]">
+            <li key={s.key} className="flex items-start gap-2.5 text-label-md">
               {s.status === "done" ? (
-                <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
+                <AppIcon name="success" className="text-success shrink-0 mt-0.5" />
               ) : s.status === "running" ? (
-                <Loader2 className="h-4 w-4 text-primary animate-spin shrink-0 mt-0.5" />
+                <AppIcon name="spinner" className="text-primary animate-spin shrink-0 mt-0.5" />
               ) : s.status === "failed" ? (
-                <AlertTriangle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+                <AppIcon name="warning" className="text-coral shrink-0 mt-0.5" />
               ) : (
                 <div className="h-4 w-4 rounded-full border border-border shrink-0 mt-0.5" />
               )}
@@ -478,7 +464,7 @@ function ProgressView({ job }: { job: JobState }) {
                 {s.detail && (
                   <div
                     className={cn(
-                      "text-[11.5px] mt-0.5",
+                      "text-caption mt-0.5",
                       s.status === "failed" ? "text-coral" : "text-muted-foreground",
                     )}
                   >
@@ -490,7 +476,7 @@ function ProgressView({ job }: { job: JobState }) {
           ))}
         </ul>
 
-        <div className="mt-5 rounded-md bg-muted/50 p-3 text-[11.5px] text-muted-foreground leading-relaxed">
+        <div className="mt-5 rounded-md bg-muted/50 p-3 text-caption text-muted-foreground leading-relaxed">
           Real generation — this typically takes 60–90 seconds. Each stage is a separate model call;
           the three domains decompose in parallel.
         </div>
@@ -507,8 +493,8 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
   if (job.status === "failed" || !root) {
     return (
       <div className="space-y-4">
-        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-[13px]">
-          <XCircle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-label-md">
+          <AppIcon name="error" className="text-coral shrink-0 mt-0.5" />
           <div>
             <div className="font-medium">Generation failed</div>
             <div className="text-muted-foreground mt-0.5">
@@ -518,7 +504,7 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
         </div>
         <StageRecap job={job} />
         <Button variant="outline" size="sm" onClick={onReset}>
-          <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
+          <AppIcon name="undo" size="sm" className="mr-1.5" />
           Try again
         </Button>
       </div>
@@ -542,16 +528,16 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
     <div className="space-y-4">
       <div
         className={cn(
-          "flex items-start gap-2 rounded-md border px-3.5 py-2.5 text-[13px]",
+          "flex items-start gap-2 rounded-md border px-3.5 py-2.5 text-label-md",
           job.status === "partial"
             ? "border-amber-brand/30 bg-amber-soft/40"
             : "border-success/30 bg-success-soft/40",
         )}
       >
         {job.status === "partial" ? (
-          <AlertTriangle className="h-4 w-4 text-amber-brand shrink-0 mt-0.5" />
+          <AppIcon name="warning" className="text-amber-brand shrink-0 mt-0.5" />
         ) : (
-          <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
+          <AppIcon name="success" className="text-success shrink-0 mt-0.5" />
         )}
         <div className="min-w-0">
           <div>
@@ -575,10 +561,10 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
         {stats.map((s) => (
           <Card key={s.l}>
             <CardContent className="p-4">
-              <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">
+              <div className="text-caption uppercase tracking-wider text-muted-foreground">
                 {s.l}
               </div>
-              <div className="tabular text-2xl font-semibold mt-1">{s.v}</div>
+              <div className="tabular font-display text-display-xl mt-1">{s.v}</div>
             </CardContent>
           </Card>
         ))}
@@ -595,9 +581,9 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
         <TabsContent value="tree" className="mt-3">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Generated decomposition</CardTitle>
-                <div className="text-[11px] text-muted-foreground">
+              <CardHeader>
+                <CardTitle>Generated decomposition</CardTitle>
+                <div className="text-caption text-muted-foreground">
                   System → domain → module → element → unit · click a node for detail
                 </div>
               </CardHeader>
@@ -622,14 +608,14 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
         <TabsContent value="gaps" className="mt-3">
           {gaps.length === 0 ? (
             <Card>
-              <CardContent className="p-6 text-[13px] text-muted-foreground">
+              <CardContent className="p-6 text-label-md text-muted-foreground">
                 No gaps identified against the source.
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-3">
-              <div className="rounded-md bg-coral-soft/40 border border-coral/30 p-3 text-[12px] leading-relaxed">
-                <AlertTriangle className="h-3.5 w-3.5 inline -mt-0.5 mr-1 text-coral" />
+              <div className="rounded-md bg-coral-soft/40 border border-coral/30 p-3 text-body-sm leading-relaxed">
+                <AppIcon name="warning" size="sm" className="inline -mt-0.5 mr-1 text-coral" />
                 Requirements a standard or good practice calls for that the source document doesn't
                 cover.
               </div>
@@ -652,14 +638,14 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
                 <TableBody>
                   {job.system_requirements.map((r) => (
                     <TableRow key={r.id}>
-                      <TableCell className="tabular text-[12px] text-muted-foreground">
+                      <TableCell className="tabular text-body-sm text-muted-foreground">
                         {r.id}
                       </TableCell>
-                      <TableCell className="text-[13px]">{r.statement}</TableCell>
+                      <TableCell className="text-label-md">{r.statement}</TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"
-                          className={cn("h-5 text-[10px] border-0", originStyle[r.origin])}
+                          className={cn("h-5 text-micro border-0", originStyle[r.origin])}
                         >
                           {originLabel[r.origin]}
                         </Badge>
@@ -680,19 +666,19 @@ function ResultView({ job, onReset }: { job: JobState; onReset: () => void }) {
             serves both the Postgres and in-memory lookup paths. */}
         <Button asChild size="sm">
           <Link to="/classification" search={{ breakdown: job.job_id }}>
-            <ListChecks className="h-3.5 w-3.5 mr-1.5" />
+            <AppIcon name="listCheck" size="sm" className="mr-1.5" />
             Classify this breakdown
-            <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+            <AppIcon name="arrowRight" size="sm" className="ml-1.5" />
           </Link>
         </Button>
         <Button asChild variant="outline" size="sm">
           <Link to="/breakdown">
             Open in Product Breakdown
-            <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+            <AppIcon name="arrowRight" size="sm" className="ml-1.5" />
           </Link>
         </Button>
         <Button variant="outline" size="sm" onClick={onReset}>
-          <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
+          <AppIcon name="undo" size="sm" className="mr-1.5" />
           Start over
         </Button>
       </div>
@@ -711,11 +697,11 @@ function NodeDetail({
 
   return (
     <Card className="h-fit">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-semibold">{node ? node.id : "Select a node"}</CardTitle>
-        {node && <div className="text-[11px] text-muted-foreground">Level {node.level}</div>}
+      <CardHeader>
+        <CardTitle>{node ? node.id : "Select a node"}</CardTitle>
+        {node && <div className="text-caption text-muted-foreground">Level {node.level}</div>}
       </CardHeader>
-      <CardContent className="space-y-3 text-[12.5px]">
+      <CardContent className="space-y-3 text-body-sm">
         {!node && <div className="text-muted-foreground">Click any node in the tree.</div>}
         {node && !req && (
           <div className="text-muted-foreground">
@@ -728,19 +714,19 @@ function NodeDetail({
             <div className="flex flex-wrap gap-1.5">
               <Badge
                 variant="outline"
-                className={cn("h-5 text-[10px] border-0", domainStyle[req.domain])}
+                className={cn("h-5 text-micro border-0", domainStyle[req.domain])}
               >
                 {req.domain}
               </Badge>
               <Badge
                 variant="outline"
-                className={cn("h-5 text-[10px] border-0", classStyle[req.classification])}
+                className={cn("h-5 text-micro border-0", classStyle[req.classification])}
               >
                 {req.classification}
               </Badge>
               <Badge
                 variant="outline"
-                className={cn("h-5 text-[10px] border-0", originStyle[req.origin])}
+                className={cn("h-5 text-micro border-0", originStyle[req.origin])}
               >
                 {originLabel[req.origin]}
               </Badge>
@@ -771,7 +757,7 @@ function Field({ label, value }: { label: string; value: string | null | undefin
   if (!value) return null;
   return (
     <div>
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-micro uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-0.5">{value}</div>
     </div>
   );
@@ -808,28 +794,28 @@ function RequirementTable({
             <TableBody>
               {rows.map((r) => (
                 <TableRow key={r.id}>
-                  <TableCell className="tabular text-[11.5px] text-muted-foreground align-top">
+                  <TableCell className="tabular text-caption text-muted-foreground align-top">
                     {r.id}
                   </TableCell>
-                  <TableCell className="text-[12.5px] align-top">{r.statement}</TableCell>
+                  <TableCell className="text-body-sm align-top">{r.statement}</TableCell>
                   <TableCell className="align-top">
                     <Badge
                       variant="outline"
-                      className={cn("h-5 text-[10px] border-0", domainStyle[r.domain])}
+                      className={cn("h-5 text-micro border-0", domainStyle[r.domain])}
                     >
                       {r.domain}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-[11.5px] text-muted-foreground align-top">
+                  <TableCell className="text-caption text-muted-foreground align-top">
                     {r.module}
                   </TableCell>
-                  <TableCell className="tabular text-[11.5px] text-muted-foreground align-top">
+                  <TableCell className="tabular text-caption text-muted-foreground align-top">
                     {r.parent_id ?? "—"}
                   </TableCell>
                   <TableCell className="align-top">
                     <Badge
                       variant="outline"
-                      className={cn("h-5 text-[10px] border-0", classStyle[r.classification])}
+                      className={cn("h-5 text-micro border-0", classStyle[r.classification])}
                     >
                       {r.classification}
                     </Badge>
@@ -837,25 +823,23 @@ function RequirementTable({
                   <TableCell className="align-top">
                     <Badge
                       variant="outline"
-                      className={cn("h-5 text-[10px] border-0", originStyle[r.origin])}
+                      className={cn("h-5 text-micro border-0", originStyle[r.origin])}
                     >
                       {originLabel[r.origin]}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-[11.5px] align-top">
+                  <TableCell className="text-caption align-top">
                     {(showGapNote ? r.gap_note : r.acceptance_criteria) ?? "—"}
                   </TableCell>
-                  <TableCell className="text-[11.5px] text-muted-foreground align-top">
+                  <TableCell className="text-caption text-muted-foreground align-top">
                     {r.standard ?? "—"}
                   </TableCell>
-                  <TableCell className="text-[11.5px] text-muted-foreground align-top">
+                  <TableCell className="text-caption text-muted-foreground align-top">
                     {r.verification_method ? (
                       <>
                         {r.verification_method}
                         {r.verification_id && (
-                          <div className="tabular text-[10.5px] opacity-70">
-                            {r.verification_id}
-                          </div>
+                          <div className="tabular text-caption opacity-70">{r.verification_id}</div>
                         )}
                       </>
                     ) : (
@@ -875,20 +859,20 @@ function RequirementTable({
 function StageRecap({ job }: { job: JobState }) {
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-semibold">Pipeline</CardTitle>
-        <div className="text-[11px] text-muted-foreground">
+      <CardHeader>
+        <CardTitle>Pipeline</CardTitle>
+        <div className="text-caption text-muted-foreground">
           {job.model ? `AI model · ${job.stages.length} stages` : `${job.stages.length} stages`}
         </div>
       </CardHeader>
       <CardContent>
         <ul className="space-y-2">
           {job.stages.map((s) => (
-            <li key={s.key} className="flex items-start gap-2.5 text-[12.5px]">
+            <li key={s.key} className="flex items-start gap-2.5 text-body-sm">
               {s.status === "done" ? (
-                <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
+                <AppIcon name="success" size="sm" className="text-success shrink-0 mt-0.5" />
               ) : s.status === "failed" ? (
-                <AlertTriangle className="h-3.5 w-3.5 text-coral shrink-0 mt-0.5" />
+                <AppIcon name="warning" size="sm" className="text-coral shrink-0 mt-0.5" />
               ) : (
                 <div className="h-3.5 w-3.5 rounded-full border border-border shrink-0 mt-0.5" />
               )}
@@ -897,7 +881,7 @@ function StageRecap({ job }: { job: JobState }) {
                 {s.detail && (
                   <span
                     className={cn(
-                      "ml-1.5 text-[11.5px]",
+                      "ml-1.5 text-caption",
                       s.status === "failed" ? "text-coral" : "text-muted-foreground",
                     )}
                   >

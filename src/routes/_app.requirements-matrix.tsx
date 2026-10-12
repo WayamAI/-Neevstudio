@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
@@ -25,7 +26,6 @@ import {
   type LiveSection,
   type MatrixSection,
 } from "@/lib/api";
-import { UploadCloud, FileText, Loader2, RotateCcw, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/requirements-matrix")({
@@ -114,7 +114,7 @@ function RequirementsMatrixPage() {
         actions={
           job ? (
             <Button variant="outline" size="sm" onClick={reset}>
-              <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
+              <AppIcon name="undo" size="sm" className="mr-1.5" />
               Start over
             </Button>
           ) : undefined
@@ -122,8 +122,8 @@ function RequirementsMatrixPage() {
       />
 
       {error && (
-        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-[13px]">
-          <XCircle className="h-4 w-4 text-coral shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2 rounded-md border border-coral/30 bg-coral-soft/40 px-3.5 py-2.5 text-label-md">
+          <AppIcon name="error" className="text-coral shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
@@ -177,16 +177,16 @@ function IntakeView({
       <Card>
         <CardContent className="p-4">
           <div className="space-y-3">
-            <div className="text-[12.5px] text-muted-foreground">
+            <div className="text-body-sm text-muted-foreground">
               Upload a requirements document. Every requirement ID and its wording are kept
               verbatim; {APP_NAME} adds rationale, applicable standards, compliance approach, hazard
               and risk level.
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[12.5px] text-muted-foreground shrink-0">Document type</span>
+              <span className="text-body-sm text-muted-foreground shrink-0">Document type</span>
               <Select value={docType} onValueChange={setDocType}>
-                <SelectTrigger className="h-8 text-[12.5px] w-[260px]">
+                <SelectTrigger className="h-8 text-body-sm w-[260px]">
                   {/* Render the label directly rather than relying on Radix to
                       resolve it — the items only register after hydration, so
                       a bare <SelectValue/> paints empty on first load. */}
@@ -194,7 +194,7 @@ function IntakeView({
                 </SelectTrigger>
                 <SelectContent>
                   {DOC_TYPES.map((t) => (
-                    <SelectItem key={t.value} value={t.value} className="text-[12.5px]">
+                    <SelectItem key={t.value} value={t.value} className="text-body-sm">
                       {t.label}
                     </SelectItem>
                   ))}
@@ -223,16 +223,16 @@ function IntakeView({
             >
               <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 {submitting ? (
-                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <AppIcon name="spinner" size="2xl" className="animate-spin" />
                 ) : (
-                  <UploadCloud className="h-6 w-6" />
+                  <AppIcon name="uploadCloud" size="2xl" />
                 )}
               </div>
               <div>
-                <div className="text-[15px] font-semibold">
+                <div className="text-body-md font-semibold">
                   {submitting ? "Reading document…" : "Drop a requirements document here"}
                 </div>
-                <div className="text-[12.5px] text-muted-foreground mt-0.5">
+                <div className="text-body-sm text-muted-foreground mt-0.5">
                   or click to browse · .docx or .pdf with two-column requirement tables
                 </div>
               </div>
@@ -252,8 +252,8 @@ function IntakeView({
       <div className="space-y-4">
         <Card>
           <CardContent className="p-4 space-y-2.5">
-            <div className="text-[13px] font-semibold">What gets exported</div>
-            <ul className="text-[12px] text-muted-foreground space-y-1.5 leading-relaxed">
+            <div className="text-label-md font-semibold">What gets exported</div>
+            <ul className="text-body-sm text-muted-foreground space-y-1.5 leading-relaxed">
               <li>
                 <span className="font-medium text-foreground">Compliance matrix</span> — a landscape
                 Word table of Req ID, requirement, rationale, standards, compliance approach, hazard
@@ -297,24 +297,24 @@ function MatrixProgress({ job }: { job: DocGenJob }) {
   return (
     <div className="space-y-4">
       <Card>
-        <CardContent className="p-6">
+        <CardContent>
           <div className="flex items-center gap-3">
-            <Loader2 className="h-5 w-5 text-primary animate-spin" />
+            <AppIcon name="spinner" size="xl" className="text-primary animate-spin" />
             <div className="min-w-0">
-              <div className="text-[14px] font-semibold">Building the compliance matrix…</div>
-              <div className="text-[12px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                <FileText className="h-3.5 w-3.5 shrink-0" />
+              <div className="text-body-md font-semibold">Building the compliance matrix…</div>
+              <div className="text-body-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                <AppIcon name="document" size="sm" className="shrink-0" />
                 <span className="truncate">{job.source_name}</span>
               </div>
             </div>
-            <div className="ml-auto tabular text-[12px] text-muted-foreground">{pct}%</div>
+            <div className="ml-auto tabular text-body-sm text-muted-foreground">{pct}%</div>
           </div>
 
           <Progress value={pct} className="h-1.5 mt-4" />
 
           <ul className="mt-5 space-y-2.5">
             {job.stages.map((s) => (
-              <li key={s.key} className="flex items-start gap-2.5 text-[13px]">
+              <li key={s.key} className="flex items-start gap-2.5 text-label-md">
                 <span className="mt-0.5">
                   <StatusIcon status={s.status} />
                 </span>
@@ -325,7 +325,7 @@ function MatrixProgress({ job }: { job: DocGenJob }) {
                   {s.detail && (
                     <div
                       className={cn(
-                        "text-[11.5px] mt-0.5",
+                        "text-caption mt-0.5",
                         s.status === "failed" ? "text-coral" : "text-muted-foreground",
                       )}
                     >
@@ -335,7 +335,7 @@ function MatrixProgress({ job }: { job: DocGenJob }) {
                   {s.key === "enrich" && s.status === "running" && job.live_sections && (
                     <ul className="mt-1.5 space-y-1">
                       {job.live_sections.map((ls) => (
-                        <li key={ls.title} className="flex items-center gap-2 text-[11.5px]">
+                        <li key={ls.title} className="flex items-center gap-2 text-caption">
                           <StatusIcon status={ls.status} small />
                           <span
                             className={cn(
@@ -355,7 +355,7 @@ function MatrixProgress({ job }: { job: DocGenJob }) {
             ))}
           </ul>
 
-          <div className="mt-5 rounded-md bg-muted/50 p-3 text-[11.5px] text-muted-foreground leading-relaxed">
+          <div className="mt-5 rounded-md bg-muted/50 p-3 text-caption text-muted-foreground leading-relaxed">
             Real generation — each section is a separate model call, three running in parallel, and
             the matrix below fills in as each call returns. Requirement text is never rewritten;
             only the analysis columns are generated.
@@ -383,8 +383,8 @@ function MatrixProgress({ job }: { job: DocGenJob }) {
             skeletonRows={s.running ? Math.min(3, Math.max(1, s.totalRows - s.rows.length)) : 0}
             headerNote={
               s.running ? (
-                <span className="ml-auto flex items-center gap-1.5 text-[11px] text-primary">
-                  <Loader2 className="h-3 w-3 animate-spin" /> generating
+                <span className="ml-auto flex items-center gap-1.5 text-caption text-primary">
+                  <AppIcon name="spinner" size="xs" className="animate-spin" /> generating
                 </span>
               ) : undefined
             }

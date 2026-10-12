@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +28,6 @@ import {
 import { bom, costBySubsystem } from "@/lib/mock-data";
 import { APP_NAME } from "@/lib/branding";
 import { cn } from "@/lib/utils";
-import { Upload, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/_app/hardware")({
   head: () => ({
@@ -103,7 +103,7 @@ function HardwarePage() {
         subtitle="342 parts · $1,776 unit cost optimized · $218 saving / unit (12.4%)"
         actions={
           <Button size="sm">
-            <Upload className="h-3.5 w-3.5 mr-1.5" />
+            <AppIcon name="upload" size="sm" className="mr-1.5" />
             Push BOM to ERP/PLM
           </Button>
         }
@@ -118,18 +118,18 @@ function HardwarePage() {
         ].map((s) => (
           <Card key={s.l}>
             <CardContent className="p-4">
-              <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">
+              <div className="text-caption uppercase tracking-wider text-muted-foreground">
                 {s.l}
               </div>
               <div
                 className={cn(
-                  "tabular text-2xl font-semibold mt-1",
+                  "tabular font-display text-display-xl mt-1",
                   s.tone === "coral" && "text-coral",
                 )}
               >
                 {s.v}
               </div>
-              <div className="text-[11px] text-muted-foreground tabular mt-0.5">{s.d}</div>
+              <div className="text-caption text-muted-foreground tabular mt-0.5">{s.d}</div>
             </CardContent>
           </Card>
         ))}
@@ -137,8 +137,8 @@ function HardwarePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Cost by subsystem</CardTitle>
+          <CardHeader>
+            <CardTitle>Cost by subsystem</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[260px]">
@@ -171,9 +171,9 @@ function HardwarePage() {
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Price optimization levers</CardTitle>
-            <div className="text-[11px] text-muted-foreground">List vs optimized unit cost</div>
+          <CardHeader>
+            <CardTitle>Price optimization levers</CardTitle>
+            <div className="text-caption text-muted-foreground">List vs optimized unit cost</div>
           </CardHeader>
           <CardContent>
             <div className="h-[260px]">
@@ -207,10 +207,8 @@ function HardwarePage() {
       </div>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">
-            Bill of materials · critical parts
-          </CardTitle>
+        <CardHeader>
+          <CardTitle>Bill of materials · critical parts</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -233,19 +231,19 @@ function HardwarePage() {
                   <TableCell className="tabular font-medium">
                     {b.id}
                     {b.cts && (
-                      <Badge className="ml-2 text-[9.5px] px-1 border-0 bg-coral-soft text-coral">
+                      <Badge className="ml-2 text-micro px-1 border-0 bg-coral-soft text-coral">
                         CTS
                       </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="text-[12.5px]">{b.part}</TableCell>
-                  <TableCell className="text-[12.5px]">{b.vendor}</TableCell>
+                  <TableCell className="text-body-sm">{b.part}</TableCell>
+                  <TableCell className="text-body-sm">{b.vendor}</TableCell>
                   <TableCell className="tabular text-right">${b.unitCost.toFixed(2)}</TableCell>
-                  <TableCell className="tabular text-[12px]">{b.leadTime}</TableCell>
+                  <TableCell className="tabular text-body-sm">{b.leadTime}</TableCell>
                   <TableCell>
                     <Badge
                       className={cn(
-                        "text-[10.5px] border-0",
+                        "text-caption border-0",
                         b.risk === "High" && "bg-coral-soft text-coral",
                         b.risk === "Medium" && "bg-amber-soft text-amber-brand",
                         b.risk === "Low" && "bg-success-soft text-success",
@@ -254,13 +252,13 @@ function HardwarePage() {
                       {b.risk}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">
+                  <TableCell className="text-body-sm text-muted-foreground">
                     {b.failureEffect}
                   </TableCell>
                   <TableCell className="tabular text-right text-success">
                     ${b.saving.toFixed(2)}
                   </TableCell>
-                  <TableCell className="tabular text-[12px]">{b.alternates}</TableCell>
+                  <TableCell className="tabular text-body-sm">{b.alternates}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -270,19 +268,19 @@ function HardwarePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
-          <CardHeader className="pb-2 flex flex-row items-center gap-2">
-            <ShieldAlert className="h-4 w-4 text-coral" />
-            <CardTitle className="text-sm font-semibold">Supply-chain risk & mitigation</CardTitle>
+          <CardHeader className="flex flex-row items-center gap-2">
+            <AppIcon name="shield" className="text-coral" />
+            <CardTitle>Supply-chain risk & mitigation</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {risks.map((r) => (
                 <div key={r.part} className="rounded-md border border-border p-3">
                   <div className="flex items-center justify-between">
-                    <div className="text-[13px] font-medium">{r.part}</div>
+                    <div className="text-label-md font-medium">{r.part}</div>
                     <Badge
                       className={cn(
-                        "text-[10.5px] border-0",
+                        "text-caption border-0",
                         r.severity === "High"
                           ? "bg-coral-soft text-coral"
                           : "bg-amber-soft text-amber-brand",
@@ -291,8 +289,8 @@ function HardwarePage() {
                       {r.severity}
                     </Badge>
                   </div>
-                  <div className="mt-1 text-[12px] text-muted-foreground">{r.risk}</div>
-                  <div className="mt-1.5 text-[12px]">
+                  <div className="mt-1 text-body-sm text-muted-foreground">{r.risk}</div>
+                  <div className="mt-1.5 text-body-sm">
                     <span className="text-muted-foreground">Mitigation:</span> {r.mitigation}
                   </div>
                 </div>
@@ -302,8 +300,8 @@ function HardwarePage() {
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Contract management</CardTitle>
+          <CardHeader>
+            <CardTitle>Contract management</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -318,11 +316,11 @@ function HardwarePage() {
               <TableBody>
                 {contracts.map((c) => (
                   <TableRow key={c.vendor}>
-                    <TableCell className="font-medium text-[12.5px]">{c.vendor}</TableCell>
+                    <TableCell className="font-medium text-body-sm">{c.vendor}</TableCell>
                     <TableCell>
                       <Badge
                         className={cn(
-                          "text-[10.5px] border-0",
+                          "text-caption border-0",
                           c.status === "Active" && "bg-success-soft text-success",
                           c.status === "Renegotiating" && "bg-amber-soft text-amber-brand",
                           c.status === "Expiring" && "bg-coral-soft text-coral",
@@ -331,7 +329,7 @@ function HardwarePage() {
                         {c.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="tabular text-[12px]">{c.renewal}</TableCell>
+                    <TableCell className="tabular text-body-sm">{c.renewal}</TableCell>
                     <TableCell className="tabular text-right">
                       ${c.spend.toLocaleString()}
                     </TableCell>

@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -11,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import type { DocGenJob, FileInfo, GeneratedDoc } from "@/lib/api";
 import { DownloadButton } from "./DownloadButton";
-import { Loader2, Network } from "lucide-react";
 
 export const DOC_LABEL: Record<GeneratedDoc["doc_type"], string> = {
   product: "Product",
@@ -46,10 +46,10 @@ export function DocPanel({
         <CardContent className="p-4">
           <div className="flex flex-wrap items-start gap-4">
             <div className="min-w-0 flex-1">
-              <div className="text-[15px] font-semibold">{doc.title}</div>
-              <div className="text-[12.5px] text-muted-foreground mt-0.5">{doc.product_name}</div>
+              <div className="text-body-md font-semibold">{doc.title}</div>
+              <div className="text-body-sm text-muted-foreground mt-0.5">{doc.product_name}</div>
               {(doc.purpose || doc.scope) && (
-                <p className="text-[12.5px] mt-2 leading-relaxed">{doc.purpose || doc.scope}</p>
+                <p className="text-body-sm mt-2 leading-relaxed">{doc.purpose || doc.scope}</p>
               )}
             </div>
             <div className="flex flex-wrap gap-2">
@@ -60,14 +60,14 @@ export function DocPanel({
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="h-8 text-[12.5px]"
+                  className="h-8 text-body-sm"
                   disabled={breakingDown}
                   onClick={() => onBreakdown(docx)}
                 >
                   {breakingDown ? (
-                    <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                    <AppIcon name="spinner" size="sm" className="mr-1.5 animate-spin" />
                   ) : (
-                    <Network className="h-3.5 w-3.5 mr-1.5" />
+                    <AppIcon name="hierarchy" size="sm" className="mr-1.5" />
                   )}
                   Break down this document
                 </Button>
@@ -78,7 +78,7 @@ export function DocPanel({
           {doc.context_table.length > 0 && (
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 mt-4 pt-3 border-t border-border">
               {doc.context_table.map((kv) => (
-                <div key={kv.label} className="flex gap-2 text-[12px]">
+                <div key={kv.label} className="flex gap-2 text-body-sm">
                   <dt className="text-muted-foreground shrink-0">{kv.label}:</dt>
                   <dd className="min-w-0">{kv.value}</dd>
                 </div>
@@ -91,7 +91,7 @@ export function DocPanel({
       {doc.overview_table.length > 0 && (
         <Card>
           <CardContent className="p-0">
-            <div className="px-4 py-2.5 border-b border-border text-[13.5px] font-semibold">
+            <div className="px-4 py-2.5 border-b border-border text-label-md font-semibold">
               Product Overview
             </div>
             <Table>
@@ -99,7 +99,7 @@ export function DocPanel({
                 {doc.overview_table.map((kv) => (
                   <TableRow key={kv.label}>
                     <TableCell className="w-[200px] font-medium align-top">{kv.label}</TableCell>
-                    <TableCell className="text-[12.5px] align-top">{kv.value}</TableCell>
+                    <TableCell className="text-body-sm align-top">{kv.value}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -114,8 +114,8 @@ export function DocPanel({
           <Card key={section.title}>
             <CardContent className="p-0">
               <div className="px-4 py-2.5 border-b border-border flex items-center gap-2">
-                <span className="text-[13.5px] font-semibold">{section.title}</span>
-                <span className="text-[11.5px] text-muted-foreground">
+                <span className="text-label-md font-semibold">{section.title}</span>
+                <span className="text-caption text-muted-foreground">
                   {section.rows.length} requirements
                 </span>
               </div>
@@ -130,7 +130,7 @@ export function DocPanel({
                   {section.rows.map((row) => (
                     <TableRow key={row.req_id}>
                       <TableCell className="font-medium tabular align-top">{row.req_id}</TableCell>
-                      <TableCell className="text-[12.5px] align-top">{row.text}</TableCell>
+                      <TableCell className="text-body-sm align-top">{row.text}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -159,11 +159,11 @@ export function DocsetResult({
       <Card>
         <CardContent className="p-4 flex flex-wrap items-center gap-3">
           <div className="min-w-0 flex-1">
-            <div className="text-[14px] font-semibold">
+            <div className="text-body-md font-semibold">
               {job.docs.length} documents · {job.docs.reduce((n, d) => n + countRows(d), 0)}{" "}
               requirements
             </div>
-            <div className="text-[12px] text-muted-foreground mt-0.5">
+            <div className="text-body-sm text-muted-foreground mt-0.5">
               Generated from: <span className="italic">{job.source_name}</span>
             </div>
           </div>
@@ -176,7 +176,7 @@ export function DocsetResult({
           {job.docs.map((doc) => (
             <TabsTrigger key={doc.doc_type} value={doc.doc_type}>
               {DOC_LABEL[doc.doc_type]}
-              <span className="ml-1.5 text-[11px] opacity-60">{countRows(doc)}</span>
+              <span className="ml-1.5 text-caption opacity-60">{countRows(doc)}</span>
             </TabsTrigger>
           ))}
         </TabsList>

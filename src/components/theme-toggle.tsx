@@ -1,18 +1,30 @@
-import { Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTheme } from "@/lib/theme-context";
 
-export function ThemeToggle() {
+/** `rail` renders the circular sidebar treatment; default is a ghost toolbar button. */
+export function ThemeToggle({ rail = false }: { rail?: boolean }) {
   const { theme, toggle } = useTheme();
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="h-9 w-9"
+  const label = `Switch to ${theme === "dark" ? "light" : "dark"} mode`;
+  const button = (
+    <IconButton
+      icon={theme === "dark" ? "sun" : "moon"}
+      label={label}
       onClick={toggle}
-      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-    >
-      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </Button>
+      variant={rail ? "subtle" : "ghost"}
+      shape={rail ? "circle" : "rounded"}
+      size={rail ? "lg" : "md"}
+      iconSize={rail ? "lg" : "md"}
+      className={rail ? "text-icon-tertiary" : undefined}
+    />
+  );
+  if (!rail) return button;
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent side="right" sideOffset={10}>
+        {label}
+      </TooltipContent>
+    </Tooltip>
   );
 }

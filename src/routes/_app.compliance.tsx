@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/app-icon";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -47,7 +48,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/compliance")({
@@ -67,7 +67,7 @@ function CoverageBar({ v }: { v: number }) {
       <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
         <div className={cn("h-full", tone)} style={{ width: v + "%" }} />
       </div>
-      <span className="tabular text-[12px] w-9">{v}%</span>
+      <span className="tabular text-body-sm w-9">{v}%</span>
     </div>
   );
 }
@@ -131,7 +131,7 @@ function CompliancePage() {
         subtitle={`10 standards mapped · ${allRules.length} active boundary conditions`}
         actions={
           <Button size="sm">
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
+            <AppIcon name="add" size="sm" className="mr-1.5" />
             Add standard
           </Button>
         }
@@ -139,8 +139,8 @@ function CompliancePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Mapped standards</CardTitle>
+          <CardHeader>
+            <CardTitle>Mapped standards</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -160,7 +160,7 @@ function CompliancePage() {
                     <TableCell className="font-medium tabular">{s.id}</TableCell>
                     <TableCell>{s.body}</TableCell>
                     <TableCell>
-                      <Badge variant="secondary" className="text-[10.5px]">
+                      <Badge variant="secondary" className="text-caption">
                         {s.category}
                       </Badge>
                     </TableCell>
@@ -172,7 +172,7 @@ function CompliancePage() {
                       <Badge
                         variant="outline"
                         className={cn(
-                          "text-[10.5px] border-0",
+                          "text-caption border-0",
                           s.status === "Aligned" && "bg-success-soft text-success",
                           s.status === "Partial" && "bg-amber-soft text-amber-brand",
                           s.status === "Gap" && "bg-coral-soft text-coral",
@@ -189,9 +189,9 @@ function CompliancePage() {
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Coverage by category</CardTitle>
-            <div className="text-[11px] text-muted-foreground">Current vs target readiness</div>
+          <CardHeader>
+            <CardTitle>Coverage by category</CardTitle>
+            <div className="text-caption text-muted-foreground">Current vs target readiness</div>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
@@ -237,15 +237,15 @@ function CompliancePage() {
       </div>
 
       <Card>
-        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-sm font-semibold">Derived boundary conditions</CardTitle>
-            <div className="text-[11px] text-muted-foreground">
+            <CardTitle>Derived boundary conditions</CardTitle>
+            <div className="text-caption text-muted-foreground">
               Versioned · Compliance Lead approval required before applying to live requirements
             </div>
           </div>
           <Button size="sm" variant="outline" onClick={() => setDialogOpen(true)}>
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
+            <AppIcon name="add" size="sm" className="mr-1.5" />
             New rule
           </Button>
         </CardHeader>
@@ -270,7 +270,7 @@ function CompliancePage() {
                   <TableCell>
                     <Badge
                       className={cn(
-                        "text-[10.5px] border-0",
+                        "text-caption border-0",
                         b.drives === "CTS"
                           ? "bg-coral-soft text-coral"
                           : "bg-amber-soft text-amber-brand",
@@ -280,7 +280,7 @@ function CompliancePage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right tabular">{b.reqs}</TableCell>
-                  <TableCell className="text-[12px] text-muted-foreground">{b.source}</TableCell>
+                  <TableCell className="text-body-sm text-muted-foreground">{b.source}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -289,9 +289,9 @@ function CompliancePage() {
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">Competitor benchmarking</CardTitle>
-          <div className="text-[11px] text-muted-foreground">
+        <CardHeader>
+          <CardTitle>Competitor benchmarking</CardTitle>
+          <div className="text-caption text-muted-foreground">
             Parameter-by-parameter vs named competitors and regulatory floor
           </div>
         </CardHeader>
@@ -344,7 +344,7 @@ function CompliancePage() {
                   <TableCell>
                     <Badge
                       className={cn(
-                        "text-[10.5px] border-0",
+                        "text-caption border-0",
                         row.v === "Leads" && "bg-success-soft text-success",
                         row.v === "On par" && "bg-secondary text-muted-foreground",
                         row.v === "Behind" && "bg-coral-soft text-coral",
@@ -426,7 +426,7 @@ function CompliancePage() {
               />
             </div>
             {createRule.isError && (
-              <div className="text-[12.5px] text-coral">{createRule.error.message}</div>
+              <div className="text-body-sm text-coral">{createRule.error.message}</div>
             )}
           </div>
 
