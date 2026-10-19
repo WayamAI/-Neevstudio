@@ -11,6 +11,15 @@ import { useTheme } from "@/lib/theme-context";
 // Not persisted (no localStorage/cookie) — every fresh load of the app (new
 // tab, reload, reopening the link) shows the login page again. Signing in
 // only unlocks the current in-memory session.
+// Chronos-style photographic hero. Drop `login-bg.jpg|png|webp` into
+// src/assets/ to use it; until then the waveform renders instead.
+const heroFiles = import.meta.glob<string>("../assets/login-bg.{jpg,jpeg,png,webp}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+const HERO_SRC = Object.values(heroFiles)[0];
+
 export function LoginGate({ children }: { children: ReactNode }) {
   const [unlocked, setUnlocked] = useState(false);
   const [email, setEmail] = useState("");
@@ -38,13 +47,37 @@ export function LoginGate({ children }: { children: ReactNode }) {
   return (
     <div className="fixed inset-0 z-50 flex min-h-0 bg-page">
       <aside className="relative hidden min-w-0 flex-[1.4] overflow-hidden border-r border-muted bg-container lg:block">
-        <WaveformHero className="absolute inset-0 rounded-none border-0" height={900} />
-        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-container to-transparent" />
+        {HERO_SRC ? (
+          <>
+            <img
+              src={HERO_SRC}
+              alt=""
+              className="absolute inset-0 size-full object-cover"
+              draggable={false}
+            />
+            <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black/70 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/85 to-transparent" />
+          </>
+        ) : (
+          <>
+            <WaveformHero className="absolute inset-0 rounded-none border-0" height={900} />
+            <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-container to-transparent" />
+          </>
+        )}
         <div className="absolute right-10 bottom-10 left-10 max-w-[36rem]">
-          <p className="font-display text-display-2xl text-primary xl:text-display-3xl">
+          <p
+            className={
+              "font-display text-display-2xl xl:text-display-3xl " +
+              (HERO_SRC ? "text-white" : "text-primary")
+            }
+          >
             {APP_TAGLINE}
           </p>
-          <p className="mt-3 max-w-[46ch] text-body-md text-tertiary">
+          <p
+            className={
+              "mt-3 max-w-[46ch] text-body-md " + (HERO_SRC ? "text-white/80" : "text-tertiary")
+            }
+          >
             Decompose, classify, verify, and optimize regulated hardware programs with live,
             bidirectional traceability from requirements to BOM.
           </p>

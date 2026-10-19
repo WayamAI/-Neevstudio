@@ -4,13 +4,27 @@ import { cn } from "@/lib/utils";
 import { AppIcon } from "@/components/ui/app-icon";
 import { APP_NAME, APP_TAGLINE } from "@/lib/branding";
 import { useTheme } from "@/lib/theme-context";
-import { NAV_GROUPS, navItemForPath } from "@/lib/navigation";
-import { SidebarItem } from "@/components/layout/SidebarItem";
+import {
+  NAV_GROUPS,
+  SETTINGS_ITEM,
+  groupAlert,
+  groupForPath,
+  navItemForPath,
+  type NavGroup,
+  type NavItem,
+} from "@/lib/navigation";
+import {
+  SidebarGroupTrigger,
+  SidebarItem,
+  SidebarTreeBranch,
+  SidebarTreeItem,
+} from "@/components/layout/SidebarItem";
 
 /**
- * Primary navigation: every Nirmiti page is its own item with its own icon,
- * in the original sections. Collapsed (68px) shows icons with tooltips;
- * expanded (252px) and the mobile drawer show section labels and item labels.
+ * Primary navigation, Chronos pattern: single-page groups are direct rail
+ * items; the rest are collapsible trees so the rail stays short.
+ * Collapsed (68px): group pucks, hover reveals a flyout of children.
+ * Expanded (252px) / mobile drawer: accordion tree with branch lines.
  * The expanded preference is remembered per browser.
  */
 
@@ -33,39 +47,31 @@ function Logo({ wordmark }: { wordmark: boolean }) {
       title={wordmark ? undefined : `${APP_NAME} — ${APP_TAGLINE}`}
       className="flex min-w-0 items-center gap-2.5 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      {wordmark ? (
-        <>
-          <img
-            src="/brand/wayam-logo-dark-bg-cropped.svg"
-            alt="Wayam AI"
-            width={748}
-            height={427}
-            className="hidden h-8 w-auto shrink-0 dark:block"
-          />
-          <img
-            src="/brand/wayam-logo-light-bg-cropped.svg"
-            alt="Wayam AI"
-            width={748}
-            height={427}
-            className="h-8 w-auto shrink-0 dark:hidden"
-          />
-          <span className="min-w-0 border-l border-muted pl-2.5">
-            <span className="block truncate font-display text-display-base text-primary">
-              {APP_NAME}
-            </span>
-            <span className="block truncate text-micro text-quaternary">{BUILD}</span>
-          </span>
-        </>
-      ) : (
-        <img
-          src="/brand/favicon.svg"
-          alt=""
-          width={32}
-          height={32}
-          className="size-8 shrink-0 rounded-[10px]"
-        />
-      )}
+      <BrandLockup wordmark={wordmark} />
     </Link>
+  );
+}
+
+/** Chronos lockup: orange mark tile, wordmark beside it when there is room. */
+export function BrandLockup({ wordmark, build = true }: { wordmark: boolean; build?: boolean }) {
+  return (
+    <>
+      <img
+        src="/brand/favicon.svg"
+        alt=""
+        width={32}
+        height={32}
+        className="size-8 shrink-0 rounded-[10px]"
+      />
+      {wordmark && (
+        <span className="min-w-0">
+          <span className="block truncate font-display text-[15px] leading-5 tracking-[0.18em] text-primary uppercase">
+            {APP_NAME}
+          </span>
+          {build && <span className="block truncate text-micro text-quaternary">{BUILD}</span>}
+        </span>
+      )}
+    </>
   );
 }
 
@@ -74,9 +80,24 @@ export function Sidebar({ open = false, onClose }: { open?: boolean; onClose?: (
   const { theme, toggle: toggleTheme } = useTheme();
   const [expanded, setExpanded] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
   const activeItem = navItemForPath(path);
+  const activeGroup = groupForPath(path);
   const showExpanded = expanded || open;
   const isDark = theme === "dark";
+
+  function isGroupOpen(id: string) {
+    return openIds[id] ?? id === activeGroup?.id;
+  }
+
+  function onGroupClick(group: NavGroup) {
+    if (!showExpanded) {
+      setExpanded(true);
+      setOpenIds((prev) => ({ ...prev, [group.id]: true }));
+      return;
+    }
+    setOpenIds((prev) => ({ ...prev, [group.id]: !isGroupOpen(group.id) }));
+  }
 
   useEffect(() => setExpanded(readExpanded()), []);
 
@@ -122,35 +143,67 @@ export function Sidebar({ open = false, onClose }: { open?: boolean; onClose?: (
         ref={navRef}
         aria-label="Main navigation"
         className={cn(
-          "min-h-0 flex-1 overflow-x-hidden overflow-y-auto py-3",
-          showExpanded ? "px-3" : "px-[14px]",
+          "min-h-0 flex-1 py-3",
+          showExpanded ? "overflow-x-hidden overflow-y-auto px-3" : "overflow-visible px-[14px]",
         )}
       >
-        {NAV_GROUPS.map((group, gi) => (
-          <div key={group.id} className={cn(gi > 0 && (showExpanded ? "mt-4" : "mt-2"))}>
-            {showExpanded ? (
-              <p className="mb-1.5 px-1 text-caption tracking-[0.08em] text-quaternary uppercase">
-                {group.label}
-              </p>
-            ) : (
-              gi > 0 && (
-                <div aria-hidden className="mx-auto mb-2 h-px w-6 bg-[var(--stroke-muted)]" />
-              )
-            )}
-            <ul aria-label={group.label} className="flex flex-col gap-1.5">
-              {group.items.map((item) => (
-                <li key={item.href}>
+        <ul className="flex flex-col gap-1.5">
+          {NAV_GROUPS.map((group) => {
+            if (group.items.length === 1) {
+              const item = group.items[0];
+              return (
+                <li key={group.id}>
                   <SidebarItem
-                    {...item}
+                    icon={item.icon}
+                    label={item.label}
+                    href={item.href}
+                    meta={item.meta}
+                    badge={item.badge}
+                    tone={item.tone}
                     active={activeItem?.href === item.href}
                     expanded={showExpanded}
                     onNavigate={onClose}
                   />
                 </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+              );
+            }
+
+            const childActive = group.items.some((i) => i.href === activeItem?.href);
+            const openGroup = showExpanded && isGroupOpen(group.id);
+            return (
+              <li
+                key={group.id}
+                className={showExpanded ? "relative overflow-hidden" : "group relative"}
+              >
+                <SidebarGroupTrigger
+                  icon={group.icon}
+                  label={group.label}
+                  active={childActive}
+                  expanded={showExpanded}
+                  open={openGroup}
+                  alert={groupAlert(group)}
+                  onClick={() => onGroupClick(group)}
+                />
+                {openGroup && (
+                  <SidebarTreeBranch>
+                    <GroupLeaves
+                      items={group.items}
+                      activeHref={activeItem?.href}
+                      onNavigate={onClose}
+                    />
+                  </SidebarTreeBranch>
+                )}
+                {!showExpanded && (
+                  <CollapsedFlyout
+                    group={group}
+                    activeHref={activeItem?.href}
+                    onNavigate={onClose}
+                  />
+                )}
+              </li>
+            );
+          })}
+        </ul>
       </nav>
 
       <div
@@ -173,8 +226,72 @@ export function Sidebar({ open = false, onClose }: { open?: boolean; onClose?: (
           onClick={toggleTheme}
           expanded={showExpanded}
         />
+        <SidebarItem
+          icon={SETTINGS_ITEM.icon}
+          label={SETTINGS_ITEM.label}
+          href={SETTINGS_ITEM.href}
+          active={activeItem?.href === SETTINGS_ITEM.href}
+          expanded={showExpanded}
+          onNavigate={onClose}
+        />
       </div>
     </aside>
+  );
+}
+
+function GroupLeaves({
+  items,
+  activeHref,
+  onNavigate,
+}: {
+  items: NavItem[];
+  activeHref?: string;
+  onNavigate?: () => void;
+}) {
+  return (
+    <ul className="flex flex-col">
+      {items.map((item, i) => (
+        <li key={item.href}>
+          <SidebarTreeItem
+            href={item.href}
+            label={item.label}
+            icon={item.icon}
+            meta={item.meta}
+            badge={item.badge}
+            tone={item.tone}
+            active={activeHref === item.href}
+            last={i === items.length - 1}
+            onNavigate={onNavigate}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Hover panel for the collapsed rail so nested pages stay one click away. */
+function CollapsedFlyout({
+  group,
+  activeHref,
+  onNavigate,
+}: {
+  group: NavGroup;
+  activeHref?: string;
+  onNavigate?: () => void;
+}) {
+  return (
+    <div className="pointer-events-none invisible absolute top-0 left-full z-50 opacity-0 transition-[opacity,visibility] duration-[180ms] group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 focus-within:pointer-events-auto focus-within:visible focus-within:opacity-100">
+      <div className="pl-2">
+        <div className="max-h-[min(80vh,560px)] w-[248px] overflow-y-auto rounded-xl border border-muted bg-container py-2 shadow-lg">
+          <p className="px-3 pb-1 text-caption tracking-[0.08em] text-quaternary uppercase">
+            {group.label}
+          </p>
+          <SidebarTreeBranch>
+            <GroupLeaves items={group.items} activeHref={activeHref} onNavigate={onNavigate} />
+          </SidebarTreeBranch>
+        </div>
+      </div>
+    </div>
   );
 }
 

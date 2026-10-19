@@ -14,6 +14,7 @@ import { reportError } from "../lib/error-reporting";
 import { LoginGate } from "@/components/login-gate";
 import { ThemeProvider } from "@/components/theme-provider";
 import { APP_NAME, APP_TAGLINE } from "@/lib/branding";
+import { THEME_STORAGE_KEY } from "@/lib/theme-context";
 import { buttonVariants } from "@/components/ui/button";
 
 function NotFoundComponent() {
@@ -119,8 +120,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning>
+    <html lang="en" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <head>
+        {/* Light by default (Chronos); apply a saved dark choice before first paint. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)})==="dark"){var d=document.documentElement;d.classList.add("dark");d.style.colorScheme="dark"}}catch(e){}`,
+          }}
+        />
         <HeadContent />
       </head>
       <body>

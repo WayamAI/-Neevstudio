@@ -2,6 +2,8 @@ import { AppIcon } from "@/components/ui/app-icon";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { APP_NAME } from "@/lib/branding";
 import { PageHeader } from "@/components/PageHeader";
+import { Mark } from "@/components/ui/mark";
+import type { MarkId } from "@/lib/marks";
 import { WaveformHero } from "@/components/WaveformHero";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -43,18 +45,28 @@ export const Route = createFileRoute("/_app/")({
 
 const p = programs[0];
 
+const STAGE_MARKS: Record<string, MarkId> = {
+  Decompose: "breakdown",
+  Classify: "classification",
+  "Map compliance": "compliance",
+  "Generate tests": "verification",
+  "Optimize BOM": "hardware",
+};
+
 function KpiCard({
   label,
   value,
   delta,
   tone,
   to,
+  mark,
 }: {
   label: string;
   value: string;
   delta?: string;
   tone?: "teal" | "coral" | "amber" | "success";
   to: string;
+  mark: MarkId;
 }) {
   const toneMap = {
     teal: "text-teal border-teal/30 bg-teal-soft/40",
@@ -70,7 +82,7 @@ function KpiCard({
             <div className="text-caption font-medium uppercase tracking-wider text-muted-foreground">
               {label}
             </div>
-            <AppIcon name="externalLink" size="sm" className="text-muted-foreground" />
+            <Mark id={mark} size={36} className="-mt-1 -mr-1" />
           </div>
           <div className="mt-2.5 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
             <div className="tabular font-display text-display-2xl">{value}</div>
@@ -110,15 +122,18 @@ function Overview() {
       {/* Hero — title, waveform band and stats are stacked so nothing draws over the text. */}
       <div className="overflow-hidden rounded-xl border border-muted bg-container">
         <div className="flex flex-col">
-          <div className="px-6 pt-5">
-            <div className="text-caption uppercase tracking-widest text-ink-foreground/60">
-              Live program telemetry
-            </div>
-            <div className="mt-1 text-ink-foreground text-xl font-semibold">
-              Aeris V500 · Verification phase
-            </div>
-            <div className="mt-0.5 text-ink-foreground/70 text-label-md">
-              Waveform reflects live agent + human activity across the traceability spine
+          <div className="flex items-start gap-3 px-6 pt-5">
+            <Mark id="telemetry" size={44} />
+            <div className="min-w-0">
+              <div className="text-caption uppercase tracking-widest text-ink-foreground/60">
+                Live program telemetry
+              </div>
+              <div className="mt-1 text-ink-foreground text-xl font-semibold">
+                Aeris V500 · Verification phase
+              </div>
+              <div className="mt-0.5 text-ink-foreground/70 text-label-md">
+                Waveform reflects live agent + human activity across the traceability spine
+              </div>
             </div>
           </div>
           <WaveformHero
@@ -153,6 +168,7 @@ function Overview() {
           value="428"
           delta="236 SW · 192 HW"
           to="/classification"
+          mark="kpi-requirements"
         />
         <KpiCard
           label="Critical-to-Safety"
@@ -160,6 +176,7 @@ function Overview() {
           delta="94% verified"
           tone="success"
           to="/classification"
+          mark="kpi-critical-safety"
         />
         <KpiCard
           label="Test coverage"
@@ -167,6 +184,7 @@ function Overview() {
           delta="1,284 cases"
           tone="teal"
           to="/verification"
+          mark="kpi-test-coverage"
         />
         <KpiCard
           label="BOM saving / unit"
@@ -174,6 +192,7 @@ function Overview() {
           delta="12.4% of BOM"
           tone="amber"
           to="/hardware"
+          mark="kpi-bom-saving"
         />
       </div>
 
@@ -304,12 +323,18 @@ function Overview() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {workflowStages.map((s) => (
-              <div key={s.name} className="rounded-lg border border-border p-3">
-                <div className="text-caption font-medium uppercase tracking-wider text-muted-foreground">
-                  {s.name}
+              <div
+                key={s.name}
+                className="flex gap-3 rounded-lg border border-border bg-raised p-3"
+              >
+                <Mark id={STAGE_MARKS[s.name] ?? "overview"} size={32} />
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-caption font-medium uppercase tracking-wider text-muted-foreground">
+                    {s.name}
+                  </div>
+                  <div className="tabular font-display text-display-lg mt-1">{s.pct}%</div>
+                  <Progress value={s.pct} className="h-1.5 mt-2" />
                 </div>
-                <div className="tabular text-xl font-semibold mt-1">{s.pct}%</div>
-                <Progress value={s.pct} className="h-1.5 mt-2" />
               </div>
             ))}
           </div>
@@ -333,7 +358,7 @@ function Overview() {
           <CardContent>
             <ul className="divide-y divide-border">
               {agentActivity.map((e) => {
-                const icon = e.actor === "agent" ? "agent" : "user";
+                const mark = e.actor === "agent" ? "agent" : "human";
                 const dot =
                   e.severity === "critical"
                     ? "bg-coral"
@@ -347,7 +372,7 @@ function Overview() {
                     <div className={"mt-1 h-2 w-2 rounded-full shrink-0 " + dot} />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 text-body-sm">
-                        <AppIcon name={icon} size="sm" className="text-muted-foreground" />
+                        <Mark id={mark} size={20} />
                         <span className="font-medium">{e.actorName}</span>
                         <span className="ml-auto tabular text-caption text-muted-foreground">
                           {e.time}
